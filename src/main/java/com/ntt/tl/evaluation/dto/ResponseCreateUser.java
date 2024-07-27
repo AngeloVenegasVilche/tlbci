@@ -6,8 +6,10 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author avenegas
@@ -15,6 +17,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Detalle del cliente al crear un usuario")
 public class ResponseCreateUser {
 	@Schema(description = "Identificador de cliente", example = "456")

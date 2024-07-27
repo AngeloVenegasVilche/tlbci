@@ -1,5 +1,7 @@
 package com.ntt.tl.evaluation.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,8 @@ import com.ntt.tl.evaluation.dto.ResponseGeneric;
 import com.ntt.tl.evaluation.service.IUserServices;
 
 @RestController
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthController {
 	
 	@Autowired
