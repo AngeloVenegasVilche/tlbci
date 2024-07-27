@@ -3,10 +3,13 @@ package com.ntt.tl.evaluation.service;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +42,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class UserService implements IUserServices {
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -73,6 +79,11 @@ public class UserService implements IUserServices {
 		
 		findUser.setLastLogin(dateNew);
 		findUser.setToken(token);
+		
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, pass));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 			
 		return ResponseGeneric.builder().message(token).build();
 	}

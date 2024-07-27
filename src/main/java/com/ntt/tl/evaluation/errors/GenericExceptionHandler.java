@@ -2,9 +2,11 @@ package com.ntt.tl.evaluation.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import com.ntt.tl.evaluation.util.ErrorUtil;
 
@@ -45,8 +47,18 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
     
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .mensaje("Usuario no encontrado")
+                .build();
+
+        log.error("Error - UsernameNotFoundException: {}", ex.getMessage(), ex);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
     
-    
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         ErrorResponse errorResponse = ErrorResponse.builder()

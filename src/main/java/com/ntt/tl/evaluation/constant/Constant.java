@@ -17,4 +17,6 @@ public class Constant {
 	    
 	    public static final String PHONE_NOT_EXIST_USER = "Telefono no existe en el usuario";
 	    
+	    public static final String TOKEN_INVALIDO = "token invalido";
+	    
 }
