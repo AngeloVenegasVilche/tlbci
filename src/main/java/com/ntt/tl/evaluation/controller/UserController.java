@@ -36,50 +36,70 @@ import jakarta.validation.Valid;
  *
  */
 @RestController
-//@Api(tags = "Apis de Usuario")
 @RequestMapping(value = "tl/test")
 public class UserController {
 
 	@Autowired
 	private IUserServices userServices;
 	
-    @Operation(summary = "Causantes por RUT")
+    @Operation(summary = "Crear un nuevo usuario")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Accepted",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ResponseCreateUser.class)) }),
-            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "Not found",
-                    content = @Content)
+        @ApiResponse(responseCode = "201", description = "Usuario creado",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ResponseCreateUser.class))),
+        @ApiResponse(responseCode = "400", description = "Entrada inválida")
     })
 	@PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<ResponseCreateUser> createUser(@Valid @RequestBody RequestUser userData) {	
 		return new ResponseEntity<>(userServices.createUser(userData), HttpStatus.CREATED);
 	}
 
+    @Operation(summary = "Obtener todos los usuarios")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuarios encontrados",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ResponseListUser.class))),
+        @ApiResponse(responseCode = "404", description = "Usuarios no encontrados")
+    })
 	@GetMapping(value = "/users")
-	//@PreAuthorize("hasAnyRole('ADMIN','EDITOR', 'USER')")
 	public ResponseEntity<ResponseListUser> getAllUser() {
 		return new ResponseEntity<>(userServices.getAllUser(), HttpStatus.CREATED);
 	}
 
+    @Operation(summary = "Obtener un usuario por ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario encontrado",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = UserDto.class))),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
 	@GetMapping(value = "/user/{idUser}")
-	//@PreAuthorize("hasRole('ADMIN','EDITOR', 'USER')")
 	public ResponseEntity<UserDto> getUser(@PathVariable String idUser) {
 		return new ResponseEntity<>(userServices.getOneUser(idUser), HttpStatus.CREATED);
 	}
 
+    @Operation(summary = "Eliminar un usuario por ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario eliminado",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ResponseGeneric.class))),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
 	@DeleteMapping(value = "/user/{idUser}")
-	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<ResponseGeneric> deleteUser(
 			@PathVariable String idUser) {
 		return new ResponseEntity<>(userServices.deleteUser(idUser), HttpStatus.CREATED);
 	}
 
+    @Operation(summary = "Actualizar un usuario")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario actualizado",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ResponseGeneric.class))),
+        @ApiResponse(responseCode = "400", description = "Entrada inválida"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
 	@PutMapping(value = "/user")
-	//@PreAuthorize("hasRole('ADMIN','EDITOR')")
 	public ResponseEntity<ResponseGeneric> updateUser(
 			 @RequestBody RequestUpdateUser userUpdate, 
 			BindingResult errors) {

@@ -32,7 +32,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		
 		try {
+			/*
 			if (request.getRequestURI().contains("/security/loginUser")) {
 				filterChain.doFilter(request, response);
 				return;
@@ -48,8 +50,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 					null, userDetails.getAuthorities());
 
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
+*/
 			filterChain.doFilter(request, response);
+			
 		} catch (Exception e) {
 			handleException(response, HttpStatus.UNAUTHORIZED, Constant.UNAUTHORIZED);
 		}
