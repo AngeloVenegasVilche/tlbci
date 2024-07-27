@@ -1,0 +1,61 @@
+package com.ntt.tl.evaluation.errors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.ntt.tl.evaluation.util.ErrorUtil;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * @author avenegas
+ */
+@Slf4j
+@RestControllerAdvice
+public class GenericExceptionHandler {
+	
+    @ExceptionHandler(GenericException.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(GenericException ex){
+    	
+        ErrorResponse errorResponse = ErrorResponse.builder()
+            .mensaje(ex.getMessage())
+            .build();
+        
+        log.error("GenericException : {}", ex.getMessage(), ex );
+        
+        return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
+    }
+    
+    
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    	
+    	
+    	String result = ErrorUtil.getDetailError(ex.getBindingResult());
+       
+    	ErrorResponse errorResponse = ErrorResponse.builder()
+                .mensaje(result)
+                .build();
+    	
+    	log.error("Error - MethodArgumentNotValidException : {}", ex.getMessage(), ex );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+    
+    
+    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .mensaje(ex.getMessage())
+                .build();
+        
+        log.error("Error - Exception : {}", ex.getMessage(), ex );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+}
