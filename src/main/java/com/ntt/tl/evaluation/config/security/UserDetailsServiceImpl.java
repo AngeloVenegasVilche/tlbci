@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private UsersEntity findUserByEmail(String email) {
 		return userRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + email));
+				.orElseThrow(() -> new UsernameNotFoundException(Constant.USER_NOT_FOUND));
 	}
 
 	private Collection<? extends GrantedAuthority> getAuthorities(UsersEntity userEntity) {

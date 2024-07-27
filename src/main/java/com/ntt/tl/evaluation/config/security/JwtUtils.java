@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -24,11 +23,6 @@ public class JwtUtils {
 
 	@Value("${security.timeToken}")
 	private String tokenExpiration;
-	
-	
-	//private JwtParser jwtParser;
-
-	// Generar token de acceso
 	
 	
 	public String createToken(Map<String, Object> propertyUser, String user) {
@@ -63,13 +57,17 @@ public class JwtUtils {
 	}
 
 	public <T> T getClaim(String toke, Function<Claims, T> claimsTFunction) {
-		Claims claims = extractAllClains(toke);
+		Claims claims = extractAllClaims(toke);
 		return claimsTFunction.apply(claims);
 	}
 
-	public Claims extractAllClains(String token) {
-		return Jwts.parser().setSigningKey(getSignaturekey()).parseClaimsJws(token).getBody();
-	}
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignaturekey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
 	public SecretKey getSignaturekey() {
 		byte[] keyBytes = Decoders.BASE64.decode(keyEncipt);

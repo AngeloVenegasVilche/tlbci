@@ -19,4 +19,6 @@ public class Constant {
 	    
 	    public static final String TOKEN_INVALIDO = "token invalido";
 	    
+	    public static final String UNAUTHORIZED = "Sin autorización";
+	    
 }

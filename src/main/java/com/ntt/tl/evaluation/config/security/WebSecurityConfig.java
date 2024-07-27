@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
     
     @Configuration
@@ -21,16 +21,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
     @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
     public class WebSecurityConfig {
   
+    	
 		private final JwtAuthEntryPoint unauthorizedHandler;
-        private final JwtAuthTokenFilter authenticationJwtTokenFilter;
+        private final JwtAuthorizationFilter authenticationJwtTokenFilter;
         
         
         public WebSecurityConfig(JwtAuthEntryPoint unauthorizedHandler,
-				JwtAuthTokenFilter authenticationJwtTokenFilter) {
+        		JwtAuthorizationFilter authenticationJwtTokenFilter) {
 			this.unauthorizedHandler = unauthorizedHandler;
 			this.authenticationJwtTokenFilter = authenticationJwtTokenFilter;
 		}
-
+		
     
         @Bean
         public PasswordEncoder passwordEncoder() {
@@ -42,6 +43,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
             return authenticationConfiguration.getAuthenticationManager();
         }
         
+        /*
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             return http
@@ -49,6 +51,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
                     .authorizeHttpRequests(req -> req
                         .anyRequest().permitAll()) // Permitir todas las solicitudes
                     .build();
+        }*/
+        
+        @Bean
+        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            return http
+            	.csrf().disable()
+            	.cors(Customizer.withDefaults())
+                .authorizeHttpRequests(req -> req
+                	.requestMatchers(HttpMethod.POST, "/tl/test/user").permitAll()
+                	.requestMatchers(HttpMethod.GET, "/security/loginUser").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/health").permitAll()
+    	            .requestMatchers(HttpMethod.GET, "/v*/api-docs/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+	        	    .anyRequest().authenticated())
+	        .build();
         }
         
 

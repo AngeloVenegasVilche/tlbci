@@ -2,6 +2,7 @@ package com.ntt.tl.evaluation.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +58,21 @@ public class GenericExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
+    
+    
+    
+    
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .mensaje(ex.getMessage())
+                .build();
+        
+        log.error("Error - Exception : {}", ex.getMessage(), ex );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     
 
     @ExceptionHandler(Exception.class)
