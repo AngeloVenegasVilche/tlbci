@@ -19,7 +19,7 @@ import com.ntt.tl.evaluation.service.IUserPhoneService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "especialista/v1")
+@RequestMapping(value = "tl/test")
 public class PhoneController {
 	
 	@Autowired

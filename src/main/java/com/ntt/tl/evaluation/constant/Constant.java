@@ -8,6 +8,9 @@ public class Constant {
 	    public static final String USER_UPDATED_SUCCESSFULLY = "User updated successfully";
 	    public static final String OK = "Ok";
 	    public static final String INVALID_PASSWORD = "La contraseña no cumple los requisitos, 1 Mayuscula | 4 carecteres o 6 caracteres| al menos 1 número";
+	    
+	    public static final String LOGIN_INVALID_USER_PASS = "Error en usuario o contraseña";
+	    
 	    public static final String INVALID_EMAIL = "Correo invalido";
 	    
 	    public static final String PHONE_EXIST_USER = "Telefono ya existe en el usuario";

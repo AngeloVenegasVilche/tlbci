@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ntt.tl</groupId>
-	<artifactId>evaluation</artifactId>
+	<artifactId>BciTestTL</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>evaluation</name>
 	<description>Test de ingreso TL NTT Data</description>
@@ -56,7 +56,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -106,8 +105,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
-    </dependency>
-    
+    </dependency>  
     		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-api</artifactId>
@@ -126,10 +124,6 @@
 		</dependency>
 		
   </dependencies>
-  
-  
-  
-
 	<build>
 		<plugins>
 			<plugin>

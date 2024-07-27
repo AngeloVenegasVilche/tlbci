@@ -37,12 +37,11 @@ import jakarta.validation.Valid;
  */
 @RestController
 //@Api(tags = "Apis de Usuario")
-@RequestMapping(value = "especialista/v1")
+@RequestMapping(value = "tl/test")
 public class UserController {
 
 	@Autowired
 	private IUserServices userServices;
-	
 	
     @Operation(summary = "Causantes por RUT")
     @ApiResponses(value = {
@@ -56,10 +55,7 @@ public class UserController {
     })
 	@PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
 	//@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<ResponseCreateUser> createUser(@Valid @RequestBody RequestUser userData) {
-		
-		//ErrorUtil.validateError(errors);
-		
+	public ResponseEntity<ResponseCreateUser> createUser(@Valid @RequestBody RequestUser userData) {	
 		return new ResponseEntity<>(userServices.createUser(userData), HttpStatus.CREATED);
 	}
 
@@ -79,7 +75,6 @@ public class UserController {
 	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<ResponseGeneric> deleteUser(
 			@PathVariable String idUser) {
-		
 		return new ResponseEntity<>(userServices.deleteUser(idUser), HttpStatus.CREATED);
 	}
 

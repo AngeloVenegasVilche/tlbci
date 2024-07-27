@@ -26,4 +26,6 @@ public interface IUserServices {
 
 	void createAdminUser();
 
+	ResponseGeneric loginUser(String email, String pass);
+
 }
