@@ -1,11 +1,11 @@
 package com.ntt.evaluation.controller
 
-import com.ntt.tl.evaluation.controller.AuthController
+
 import com.ntt.tl.evaluation.controller.PhoneController
 import com.ntt.tl.evaluation.dto.PhoneDto
 import com.ntt.tl.evaluation.dto.RequestPhoneUser
 import com.ntt.tl.evaluation.dto.ResponseGeneric
-import com.ntt.tl.evaluation.service.IUserPhoneService
+import com.ntt.tl.evaluation.service.IPhoneService
 import org.springframework.http.HttpStatus
 import spock.lang.Narrative
 import spock.lang.Specification
@@ -17,7 +17,7 @@ import spock.lang.Title
 @Subject(PhoneController)
 class PhoneControllerSpec extends Specification {
 
-    def userPhoneService = Mock(IUserPhoneService)
+    def userPhoneService = Mock(IPhoneService)
     def phoneController = new PhoneController(userPhoneService: userPhoneService)
 
     def "test createUserPhone"() {

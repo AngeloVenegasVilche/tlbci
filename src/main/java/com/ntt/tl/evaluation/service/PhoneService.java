@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 
 @Service
-public class UserPhoneService implements IUserPhoneService {
+public class PhoneService implements IPhoneService {
 
 	@Autowired
 	private PhoneRepository phoneRepository;

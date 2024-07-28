@@ -6,7 +6,7 @@ import com.ntt.tl.evaluation.entity.UsersEntity
 import com.ntt.tl.evaluation.entity.UsersPhoneEntity
 import com.ntt.tl.evaluation.repository.PhoneRepository
 import com.ntt.tl.evaluation.repository.UserRepository
-import com.ntt.tl.evaluation.service.UserPhoneService
+import com.ntt.tl.evaluation.service.PhoneService
 import spock.lang.Narrative
 import spock.lang.Specification
 import com.ntt.tl.evaluation.errors.GenericException
@@ -16,16 +16,16 @@ import spock.lang.Title
 
 @Title("Test unitarios para servicio phone")
 @Narrative("Test unitarios para servicio phone")
-@Subject(UserPhoneService)
+@Subject(PhoneService)
 class UserPhoneServiceSpec extends Specification {
-    UserPhoneService userPhoneService
+    PhoneService userPhoneService
     PhoneRepository phoneRepository
     UserRepository userRepository
 
     def setup() {
         phoneRepository = Mock(PhoneRepository)
         userRepository = Mock(UserRepository)
-        userPhoneService = new UserPhoneService(
+        userPhoneService = new PhoneService(
                 phoneRepository: phoneRepository,
                 userRepository: userRepository
         )

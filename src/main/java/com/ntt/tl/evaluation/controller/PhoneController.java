@@ -1,5 +1,6 @@
 package com.ntt.tl.evaluation.controller;
 
+import com.ntt.tl.evaluation.service.IPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ntt.tl.evaluation.dto.RequestPhoneUser;
 import com.ntt.tl.evaluation.dto.ResponseGeneric;
-import com.ntt.tl.evaluation.service.IUserPhoneService;
 
 import jakarta.validation.Valid;
 
@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 public class PhoneController {
 	
 	@Autowired
-	private IUserPhoneService userPhoneService;
+	private IPhoneService userPhoneService;
 	
 	
 	@PostMapping(value = "/phones", produces = MediaType.APPLICATION_JSON_VALUE)
