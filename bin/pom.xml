@@ -11,7 +11,7 @@
 	<groupId>com.ntt.tl</groupId>
 	<artifactId>BciTestTL</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>evaluation TL</name>
+	<name>evaluation</name>
 	<description>Test de ingreso TL NTT Data</description>
 	<url/>
 	<licenses>

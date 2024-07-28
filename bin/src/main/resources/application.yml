@@ -1,0 +1,55 @@
+info:
+  title: TL test
+  description: Test para postular al cargo de TL
+  version: V1
+  license: Licencia
+  licenseUrl: http://www.bci/test/.cl
+  termsOfService: Terminos
+
+server:
+  port: 9090
+
+spring:
+  security:
+    user:
+      name: angelo
+      password: 123456
+  datasource:
+    url: jdbc:hsqldb:file:C:/localBD/BDTestTL
+    username: sa
+    password: 
+    driverClassName: org.hsqldb.jdbc.JDBCDriver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        SQL: DEBUG
+security:
+  keyEncript: FBlBRsMjc0w/BggFv+bcKiSbqOAM/HVT5eMc2sJpgTsEDkGrPlrmeKvMLb7Amu8T
+  timeToken: 600000
+
+validations:
+  passregex : "^(?=.*[A-Z])(?=.*\\d).{4,6}$"
+  emailsregex: "[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}"
+
+management:
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  endpoint:
+    health:
+      enabled: true
+      show-details: "always"
+      probes:
+        enabled: true
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: '/'
+      exposure:
+        include: health
