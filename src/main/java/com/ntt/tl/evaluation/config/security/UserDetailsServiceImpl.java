@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -13,9 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ntt.tl.evaluation.constant.Constant;
+import com.ntt.tl.evaluation.constant.ConstantMessage;
 import com.ntt.tl.evaluation.entity.UsersEntity;
-import com.ntt.tl.evaluation.errors.GenericException;
 import com.ntt.tl.evaluation.repository.UserRepository;
 
 @Service
@@ -34,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private UsersEntity findUserByEmail(String email) {
 		return userRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException(Constant.USER_NOT_FOUND));
+				.orElseThrow(() -> new UsernameNotFoundException(ConstantMessage.USER_NOT_FOUND));
 	}
 
 	private Collection<? extends GrantedAuthority> getAuthorities(UsersEntity userEntity) {

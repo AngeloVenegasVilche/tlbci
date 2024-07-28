@@ -2,7 +2,7 @@ package com.ntt.evaluation.service
 
 import com.ntt.tl.evaluation.config.AppConfig
 import com.ntt.tl.evaluation.config.security.JwtUtils
-import com.ntt.tl.evaluation.constant.ERole
+import com.ntt.tl.evaluation.constant.ERoleUser
 import com.ntt.tl.evaluation.dto.PhoneDto
 import com.ntt.tl.evaluation.dto.PhoneUpdateDto
 import com.ntt.tl.evaluation.dto.RequestUpdateUser
@@ -58,7 +58,7 @@ class UserServiceSpec extends Specification {
                 email: email,
                 pass: "encodedPassword",
                 isActive: true,
-                roles: [new RoleEntity(name: ERole.ADMIN)]
+                roles: [new RoleEntity(name: ERoleUser.ADMIN)]
         )
         def token = "jwt_token"
 
@@ -96,7 +96,7 @@ class UserServiceSpec extends Specification {
                 token: "new_token",
                 isActive: true,
                 phones: [new UsersPhoneEntity(phoneNumber: "123456789", cityCode: "01", countryCode: "34")],
-                roles: [new RoleEntity(name: ERole.USER)]
+                roles: [new RoleEntity(name: ERoleUser.USER)]
         )
 
         userRepository.findByEmail(requestUser.email) >> Optional.empty()
@@ -157,7 +157,7 @@ class UserServiceSpec extends Specification {
                 lastLogin: dateNew,
                 isActive: true,
                 phones: [new UsersPhoneEntity(phoneNumber: "123456789", cityCode: "01", countryCode: "34")],
-                roles: [new RoleEntity(name: ERole.USER)]
+                roles: [new RoleEntity(name: ERoleUser.USER)]
         )
 
         def userDto = new UserDto(

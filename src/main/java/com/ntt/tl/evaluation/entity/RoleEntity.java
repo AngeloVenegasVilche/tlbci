@@ -1,6 +1,6 @@
 package com.ntt.tl.evaluation.entity;
 
-import com.ntt.tl.evaluation.constant.ERole;
+import com.ntt.tl.evaluation.constant.ERoleUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +30,6 @@ public class RoleEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "name_role")
-	private ERole name;
+	private ERoleUser name;
 
 }

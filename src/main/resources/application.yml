@@ -1,9 +1,9 @@
 info:
   title: TL test
-  description: TODO
+  description: Test para postular al cargo de TL
   version: V1
   license: Licencia
-  licenseUrl: http://www.licenceafphabitat.test
+  licenseUrl: http://www.bci/test/.cl
   termsOfService: Terminos
 
 server:
@@ -15,14 +15,14 @@ spring:
       name: angelo
       password: 123456
   datasource:
-    url: jdbc:hsqldb:file:C:/localBD/EspInteg
+    url: jdbc:hsqldb:file:C:/localBD/BDTestTL
     username: sa
     password: 
     driverClassName: org.hsqldb.jdbc.JDBCDriver
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true

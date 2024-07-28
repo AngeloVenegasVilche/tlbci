@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.ntt.tl.evaluation.constant.ERoleUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,8 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.ntt.tl.evaluation.config.AppConfig;
 import com.ntt.tl.evaluation.config.security.JwtUtils;
-import com.ntt.tl.evaluation.constant.Constant;
-import com.ntt.tl.evaluation.constant.ERole;
+import com.ntt.tl.evaluation.constant.ConstantMessage;
 import com.ntt.tl.evaluation.dto.RequestUpdateUser;
 import com.ntt.tl.evaluation.dto.RequestUser;
 import com.ntt.tl.evaluation.dto.ResponseCreateUser;
@@ -73,10 +73,10 @@ public class UserService implements IUserServices {
 	public ResponseGeneric loginUser(String email, String pass) {
 
 		UsersEntity findUser = userRepository.findByEmail(email)
-				.orElseThrow(() -> new GenericException(Constant.LOGIN_INVALID_USER_PASS, HttpStatus.UNAUTHORIZED));
+				.orElseThrow(() -> new GenericException(ConstantMessage.LOGIN_INVALID_USER_PASS, HttpStatus.UNAUTHORIZED));
 
 		if (!passwordEncoder.matches(pass, findUser.getPass())) {
-			throw new GenericException(Constant.LOGIN_INVALID_USER_PASS, HttpStatus.UNAUTHORIZED);
+			throw new GenericException(ConstantMessage.LOGIN_INVALID_USER_PASS, HttpStatus.UNAUTHORIZED);
 		}
 		
 		List<String> roleNames = findUser.getRoles().stream()
@@ -124,12 +124,12 @@ public class UserService implements IUserServices {
 	@Override
 	public void createAdminUser() {
 		Date dateNew = new Date();
-		List<String> roleList = Arrays.stream(ERole.values()).map(Enum::name).toList();
+		List<String> roleList = Arrays.stream(ERoleUser.values()).map(Enum::name).toList();
 
 		UsersEntity usersEntity = UsersEntity.builder().idUser(CommonUtil.generateUUID())
-				.pass(passwordEncoder.encode("Just21")).name("Administrador").created(dateNew).modified(dateNew)
+				.pass(passwordEncoder.encode("Just21.")).name("Administrador").created(dateNew).modified(dateNew)
 				.email("admin@admin.com").token("").isActive(true).lastLogin(dateNew)
-				.roles(roleList.stream().map(role -> RoleEntity.builder().name(ERole.valueOf(role)).build()).toList())
+				.roles(roleList.stream().map(role -> RoleEntity.builder().name(ERoleUser.valueOf(role)).build()).toList())
 				.build();
 
 		userRepository.save(usersEntity);
@@ -150,21 +150,21 @@ public class UserService implements IUserServices {
 	public ResponseCreateUser createUser(RequestUser requestUser) {
 
 		userRepository.findByEmail(requestUser.getEmail()).ifPresent(user -> {
-			throw new GenericException(Constant.EMAIL_EXISTS, HttpStatus.CONFLICT);
+			throw new GenericException(ConstantMessage.EMAIL_EXISTS, HttpStatus.CONFLICT);
 		});
 
 		boolean isValidRol = requestUser.getRoles().stream().allMatch(ErrorUtil::isRoleValid);
 
 		if (!isValidRol) {
-			throw new GenericException(Constant.ROLE_NOT_EXIST, HttpStatus.CONFLICT);
+			throw new GenericException(ConstantMessage.ROLE_NOT_EXIST, HttpStatus.CONFLICT);
 		}
 
 		if (!CommonUtil.validateRegexPattern(requestUser.getPassword(), appConfig.getPassRegex())) {
-			throw new GenericException(Constant.INVALID_PASSWORD, HttpStatus.BAD_REQUEST);
+			throw new GenericException(ConstantMessage.INVALID_PASSWORD, HttpStatus.BAD_REQUEST);
 		}
 
 		if (!CommonUtil.validateRegexPattern(requestUser.getEmail(), appConfig.getEmailRegex())) {
-			throw new GenericException(Constant.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
+			throw new GenericException(ConstantMessage.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
 		}
 
 		Date dateNew = new Date();
@@ -201,7 +201,7 @@ public class UserService implements IUserServices {
 
 		UsersEntity userFind = findValidUser(idUser);
 		userRepository.delete(userFind);
-		return ResponseGeneric.builder().message(Constant.OK).build();
+		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 
 	}
 
@@ -254,7 +254,7 @@ public class UserService implements IUserServices {
 		userFind.setIsActive(userRequest.isActive());
 		userRepository.save(userFind);
 
-		return ResponseGeneric.builder().message(Constant.OK).build();
+		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 	}
 
     /**
@@ -267,7 +267,7 @@ public class UserService implements IUserServices {
 	private UsersEntity findValidUser(String userId) {
 
 		return userRepository.findById(userId)
-				.orElseThrow(() -> new GenericException(Constant.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 	}
 
 }

@@ -5,7 +5,7 @@ import spock.lang.Specification
 import com.ntt.tl.evaluation.mapper.UserMapper
 import com.ntt.tl.evaluation.entity.*
 import com.ntt.tl.evaluation.dto.*
-import com.ntt.tl.evaluation.constant.ERole;
+import com.ntt.tl.evaluation.constant.ERoleUser;
 class UserMapperSpec extends Specification {
 
     UserMapper userMapper
@@ -23,8 +23,8 @@ class UserMapperSpec extends Specification {
 
         then: "El resultado debe ser una lista de RoleEntity con los roles correctos"
         resultado.size() == 2
-        resultado[0].name == ERole.ADMIN
-        resultado[1].name == ERole.EDITOR
+        resultado[0].name == ERoleUser.ADMIN
+        resultado[1].name == ERoleUser.EDITOR
     }
 
     def "listPhoneDtoToUsersListPhoneEntity debería convertir una lista de PhoneDto a una lista de UsersPhoneEntity"() {
@@ -129,7 +129,7 @@ class UserMapperSpec extends Specification {
                 modified: new Date(),
                 created: new Date(),
                 token: "token123",
-                roles: [new RoleEntity(name: ERole.ADMIN)]
+                roles: [new RoleEntity(name: ERoleUser.ADMIN)]
         )
 
         when: "Se llama al método usersEntityToResponseCreateUser"

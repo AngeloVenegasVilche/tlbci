@@ -1,6 +1,6 @@
 package com.ntt.tl.evaluation.constant;
 
-public enum ERole {
+public enum ERoleUser {
 	ADMIN,
 	USER,
 	INVITED,

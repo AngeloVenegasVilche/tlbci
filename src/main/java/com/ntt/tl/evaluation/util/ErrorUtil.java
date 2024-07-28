@@ -1,10 +1,9 @@
 package com.ntt.tl.evaluation.util;
 
+import com.ntt.tl.evaluation.constant.ERoleUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-
-import com.ntt.tl.evaluation.constant.ERole;
 import com.ntt.tl.evaluation.errors.GenericException;
 
 /**
@@ -13,10 +12,7 @@ import com.ntt.tl.evaluation.errors.GenericException;
  */
 public class ErrorUtil {
 
-	   
-
 	/**
-	 * @param requestUser
 	 * @param errors
 	 */
 	public static void validateError(BindingResult errors) {
@@ -50,7 +46,7 @@ public class ErrorUtil {
 
 	public static boolean isRoleValid(String roleName) {
 		try {
-			ERole.valueOf(roleName);
+			ERoleUser.valueOf(roleName);
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;

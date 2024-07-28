@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ntt.tl.evaluation.constant.ERoleUser;
 import org.springframework.stereotype.Component;
 
-import com.ntt.tl.evaluation.constant.ERole;
 import com.ntt.tl.evaluation.dto.PhoneDto;
 import com.ntt.tl.evaluation.dto.PhoneUpdateDto;
 import com.ntt.tl.evaluation.dto.RequestUser;
@@ -22,7 +22,7 @@ public class UserMapper {
 
 	public List<RoleEntity> listRoleToEntity(List<String> roles) {
 
-		return roles.stream().map(role -> RoleEntity.builder().name(ERole.valueOf(role)).build())
+		return roles.stream().map(role -> RoleEntity.builder().name(ERoleUser.valueOf(role)).build())
 				.collect(Collectors.toList());
 	}
 
@@ -77,7 +77,7 @@ public class UserMapper {
 
 	public ResponseCreateUser usersEntityToResponseCreateUser(UsersEntity userSave) {
 
-		List<String> roles = userSave.getRoles().stream().map(RoleEntity::getName).map(ERole::toString)
+		List<String> roles = userSave.getRoles().stream().map(RoleEntity::getName).map(ERoleUser::toString)
 				.collect(Collectors.toList());
 
 		ResponseCreateUser responseUser = ResponseCreateUser.builder().idUser(userSave.getIdUser())

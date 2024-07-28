@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ntt.tl.evaluation.constant.Constant;
+import com.ntt.tl.evaluation.constant.ConstantMessage;
 import com.ntt.tl.evaluation.errors.ErrorResponse;
 
 import jakarta.servlet.FilterChain;
@@ -29,16 +29,23 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
 
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		String path = request.getRequestURI();
+		return path.startsWith("/health") ||
+				path.startsWith("/v2/api-docs") ||
+				path.startsWith("/security/loginUser") ||
+				path.startsWith("/v3/api-docs") ||
+				path.startsWith("/swagger-ui.html") ||
+				path.startsWith("/swagger-ui/");
+	}
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
 		try {
-			/*
-			if (request.getRequestURI().contains("/security/loginUser")) {
-				filterChain.doFilter(request, response);
-				return;
-			}
 
 			String token = getTokenFromHeader(request.getHeader("Authorization"));
 
@@ -50,24 +57,24 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 					null, userDetails.getAuthorities());
 
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-*/
+
 			filterChain.doFilter(request, response);
 			
 		} catch (Exception e) {
-			handleException(response, HttpStatus.UNAUTHORIZED, Constant.UNAUTHORIZED);
+			handleException(response, HttpStatus.UNAUTHORIZED, ConstantMessage.UNAUTHORIZED);
 		}
 
 	}
 
 	private String getTokenFromHeader(String tokenHeader) {
 		if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
-			throw new UsernameNotFoundException(Constant.TOKEN_INVALIDO);
+			throw new UsernameNotFoundException(ConstantMessage.TOKEN_INVALIDO);
 		}
 
 		String token = tokenHeader.substring(7);
 
 		if (!jwtUtils.isTokenValid(token)) {
-			throw new UsernameNotFoundException(Constant.TOKEN_INVALIDO);
+			throw new UsernameNotFoundException(ConstantMessage.TOKEN_INVALIDO);
 		}
 
 		return token;

@@ -49,7 +49,7 @@ public class UserController {
             schema = @Schema(implementation = ResponseCreateUser.class))),
         @ApiResponse(responseCode = "400", description = "Entrada inválida")
     })
-	@PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseCreateUser> createUser(@Valid @RequestBody RequestUser userData) {	
 		return new ResponseEntity<>(userServices.createUser(userData), HttpStatus.CREATED);
 	}
@@ -73,7 +73,7 @@ public class UserController {
             schema = @Schema(implementation = UserDto.class))),
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     })
-	@GetMapping(value = "/user/{idUser}")
+	@GetMapping(value = "/users/{idUser}")
 	public ResponseEntity<UserDto> getUser(@PathVariable String idUser) {
 		return new ResponseEntity<>(userServices.getOneUser(idUser), HttpStatus.CREATED);
 	}
@@ -85,7 +85,7 @@ public class UserController {
             schema = @Schema(implementation = ResponseGeneric.class))),
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     })
-	@DeleteMapping(value = "/user/{idUser}")
+	@DeleteMapping(value = "/users/{idUser}")
 	public ResponseEntity<ResponseGeneric> deleteUser(
 			@PathVariable String idUser) {
 		return new ResponseEntity<>(userServices.deleteUser(idUser), HttpStatus.CREATED);
@@ -99,7 +99,7 @@ public class UserController {
         @ApiResponse(responseCode = "400", description = "Entrada inválida"),
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     })
-	@PutMapping(value = "/user")
+	@PutMapping(value = "/users")
 	public ResponseEntity<ResponseGeneric> updateUser(
 			 @RequestBody RequestUpdateUser userUpdate, 
 			BindingResult errors) {

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.ntt.tl.evaluation.constant.Constant;
+import com.ntt.tl.evaluation.constant.ConstantMessage;
 import com.ntt.tl.evaluation.dto.RequestPhoneUser;
 import com.ntt.tl.evaluation.dto.ResponseGeneric;
 import com.ntt.tl.evaluation.entity.UsersEntity;
@@ -41,14 +41,14 @@ public class PhoneService implements IPhoneService {
 	public ResponseGeneric createPhoneToUser(RequestPhoneUser requestPhoneUser) {
 
 		UsersEntity userFind = userRepository.findById(requestPhoneUser.getIdUser())
-				.orElseThrow(() -> new GenericException(Constant.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
 		Optional<UsersPhoneEntity> findPhone = phoneRepository.existsByPhoneNumberCityCodeAndCountryCode(
 				requestPhoneUser.getPhone().getNumber(), requestPhoneUser.getPhone().getCitycode(),
 				requestPhoneUser.getPhone().getContrycode(), requestPhoneUser.getIdUser());
 
 		if (findPhone.isPresent()) {
-			throw new GenericException(Constant.PHONE_EXIST_USER, HttpStatus.CONFLICT);
+			throw new GenericException(ConstantMessage.PHONE_EXIST_USER, HttpStatus.CONFLICT);
 		}
 
 		UsersPhoneEntity usersPhoneEntity = UsersPhoneEntity.builder()
@@ -79,7 +79,7 @@ public class PhoneService implements IPhoneService {
 		userRepository.save(usersEntity);
 		phoneRepository.delete(findPhone);
 
-		return ResponseGeneric.builder().message(Constant.OK).build();
+		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 
 	}
 
@@ -101,21 +101,21 @@ public class PhoneService implements IPhoneService {
 
 		phoneRepository.save(findPhone);
 
-		return ResponseGeneric.builder().message(Constant.OK).build();
+		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 
 	}
 
 	private UsersEntity findUserValid(String userId) {
 
 		return userRepository.findById(userId)
-				.orElseThrow(() -> new GenericException(Constant.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
 	}
 
 	private UsersPhoneEntity findPhoneValid(UsersEntity findUser, Integer phoneId) {
 
 		return findUser.getPhones().stream().filter(o -> o.getId() == phoneId).findFirst()
-				.orElseThrow(() -> new GenericException(Constant.PHONE_NOT_EXIST_USER, HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new GenericException(ConstantMessage.PHONE_NOT_EXIST_USER, HttpStatus.NOT_FOUND));
 
 	}
 

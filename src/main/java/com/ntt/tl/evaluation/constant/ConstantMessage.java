@@ -1,6 +1,6 @@
 package com.ntt.tl.evaluation.constant;
 
-public class Constant {
+public class ConstantMessage {
 	   	public static final String INTERNAL_ERROR = "Internal Error";
 	    public static final String USER_NOT_FOUND = "Usuario no existe";
 	    public static final String EMAIL_EXISTS = "Correo ya existe en otro usuario";
