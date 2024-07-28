@@ -1,52 +1,36 @@
-package com.ntt.tl.evaluation.controller
+package controller
 
+import com.ntt.tl.evaluation.controller.AuthController
 import com.ntt.tl.evaluation.dto.ResponseGeneric
 import com.ntt.tl.evaluation.service.IUserServices
-import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.http.HttpStatus
 import spock.lang.Narrative
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Title
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-
 @Title("Test unitarios para AuthController")
 @Narrative("")
 @Subject(AuthController)
 class AuthControllerSpec extends Specification {
-    private AuthController authController;
-    private IUserServices userServices = Mock(IUserServices);
-    private MockMvc mockMvc;
 
-    def setup() {
-        authController = new AuthController(userServices);
-        mockMvc = standaloneSetup(AuthController).build();
+    def userServices = Mock(IUserServices)
+    def authController = new AuthController(userServices: userServices)
+
+    def "test generateToken"() {
+        given:
+        def email = "test@example.com"
+        def password = "password123"
+        def expectedResponse = new ResponseGeneric("test")
+
+        userServices.loginUser(_ as String, _ as String) >> expectedResponse;
+
+        when:
+        def result = authController.generateToken(email, password)
+
+        then:
+        result.getStatusCode() == HttpStatus.CREATED
+        result.getBody() == expectedResponse
     }
-
-    def "Test para "() {
-        given: " "
-        userServices.loginUser(_ as String, _ as String) >> new ResponseGeneric();
-
-        when: " asdadadda"
-
-        def resultAction = mockMvc
-                .perform(get("/security/loginUser/angelo.venegas@hotmail.fll/Jus12.")
-                        .accept(MediaType.APPLICATION_JSON))
-
-        then: "asdadadad "
-
-        resultAction.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        resultAction.andExpect(status().is(200))
-
-
-        where:
-        1==1
-
-    }
-
 
 }
