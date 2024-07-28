@@ -1,4 +1,4 @@
-package controller
+package com.ntt.evaluation.controller
 
 import com.ntt.tl.evaluation.controller.AuthController
 import com.ntt.tl.evaluation.controller.PhoneController

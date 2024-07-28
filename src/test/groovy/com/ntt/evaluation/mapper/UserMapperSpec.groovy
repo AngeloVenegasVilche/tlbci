@@ -1,4 +1,4 @@
-package mapper
+package com.ntt.evaluation.controller.mapper
 
 
 import spock.lang.Specification

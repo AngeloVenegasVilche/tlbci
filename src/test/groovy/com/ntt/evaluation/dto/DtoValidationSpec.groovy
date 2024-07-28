@@ -1,4 +1,4 @@
-package dto
+package com.ntt.evaluation.controller.dto
 
 import com.ntt.tl.evaluation.controller.AuthController
 import com.ntt.tl.evaluation.dto.PhoneDto

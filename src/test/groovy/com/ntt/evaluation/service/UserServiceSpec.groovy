@@ -1,4 +1,4 @@
-package service
+package com.ntt.evaluation.service
 
 import com.ntt.tl.evaluation.config.AppConfig
 import com.ntt.tl.evaluation.config.security.JwtUtils
