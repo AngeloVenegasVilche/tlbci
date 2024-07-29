@@ -12,9 +12,7 @@ public interface IUserServices {
 	ResponseGeneric deleteUser(String idUser);
 
 	ResponseGeneric activeAccount(RequestActivateAccount requestActivateAccount);
-
-	Boolean updateLastLogin(String idUser, String token, Date loginDate);
-
+	
 	ResponseListUser getAllUser();
 
 	UserDto getOneUser(String idUser);

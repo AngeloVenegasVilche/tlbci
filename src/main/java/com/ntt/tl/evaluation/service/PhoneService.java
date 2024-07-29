@@ -2,6 +2,8 @@ package com.ntt.tl.evaluation.service;
 
 import java.util.Optional;
 
+import com.ntt.tl.evaluation.config.AppConfig;
+import com.ntt.tl.evaluation.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class PhoneService implements IPhoneService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private AppConfig appConfig;
 
 	@Override
 	public ResponseGeneric createPhoneToUser(RequestPhoneUser requestPhoneUser) {
@@ -89,6 +94,10 @@ public class PhoneService implements IPhoneService {
 	}
 
 	private UsersEntity findUserValid(String email) {
+
+		if (!CommonUtil.validateRegexPattern(email, appConfig.getEmailRegex())) {
+			throw new GenericException(ConstantMessage.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
+		}
 
 		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));

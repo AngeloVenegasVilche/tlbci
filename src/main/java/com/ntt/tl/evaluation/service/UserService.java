@@ -62,6 +62,8 @@ public class UserService implements IUserServices {
 	@Override
 	public String loginUser(String email, String pass) {
 
+		validatePass(pass);
+
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				email,
 				pass
@@ -83,7 +85,7 @@ public class UserService implements IUserServices {
 	}
 
 	@Override
-	public ResponseGeneric activeAccount(RequestActivateAccount requestActivateAccount){
+	public ResponseGeneric activeAccount(RequestActivateAccount requestActivateAccount) {
 
 		UsersEntity findUser = findValidUser(requestActivateAccount.getEmail());
 		findUser.setIsActive(requestActivateAccount.getActivate());
@@ -92,23 +94,11 @@ public class UserService implements IUserServices {
 
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 	}
-	
+
 	/**
 	 * Actualiza el ultimo login y token
 	 */
 
-	@Override
-	public Boolean updateLastLogin(String idUser, String token, Date loginDate) {
-
-		UsersEntity userFind = findValidUser(idUser);
-
-		userFind.setToken(idUser);
-		userFind.setLastLogin(loginDate);
-		userRepository.save(userFind);
-
-		return true;
-
-	}
 
 
 	@Override
@@ -133,6 +123,9 @@ public class UserService implements IUserServices {
 	@Transactional
 	public ResponseCreateUser createUser(RequestUser requestUser) {
 
+		validateEmail(requestUser.getEmail());
+		validatePass(requestUser.getPassword());
+
 		userRepository.findByEmail(requestUser.getEmail()).ifPresent(user -> {
 			throw new GenericException(ConstantMessage.EMAIL_EXISTS, HttpStatus.CONFLICT);
 		});
@@ -141,14 +134,6 @@ public class UserService implements IUserServices {
 
 		if (!isValidRol) {
 			throw new GenericException(ConstantMessage.ROLE_NOT_EXIST, HttpStatus.CONFLICT);
-		}
-
-		if (!CommonUtil.validateRegexPattern(requestUser.getPassword(), appConfig.getPassRegex())) {
-			throw new GenericException(ConstantMessage.INVALID_PASSWORD, HttpStatus.BAD_REQUEST);
-		}
-
-		if (!CommonUtil.validateRegexPattern(requestUser.getEmail(), appConfig.getEmailRegex())) {
-			throw new GenericException(ConstantMessage.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
 		}
 
 		Date dateNew = new Date();
@@ -171,15 +156,14 @@ public class UserService implements IUserServices {
 	}
 
 
-
 	/**
 	 * Elimina el usuario.
 	 */
 
 	@Override
-	public ResponseGeneric deleteUser(String idUser) {
+	public ResponseGeneric deleteUser(String email) {
 
-		UsersEntity userFind = findValidUser(idUser);
+		UsersEntity userFind = findValidUser(email);
 		userRepository.delete(userFind);
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 
@@ -203,9 +187,9 @@ public class UserService implements IUserServices {
 	 */
 
 	@Override
-	public UserDto getOneUser(String idUser) {
+	public UserDto getOneUser(String email) {
 
-		UsersEntity userFind = findValidUser(idUser);
+		UsersEntity userFind = findValidUser(email);
 		return userMapper.userBdToUserDto(userFind);
 	}
 
@@ -227,13 +211,25 @@ public class UserService implements IUserServices {
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 	}
 
-    /**
-     * Encuentra un usuario válido por su ID.
-     */
-	private UsersEntity findValidUser(String userId) {
-
-		return userRepository.findByEmail(userId)
+	/**
+	 * Encuentra un usuario válido por su ID.
+	 */
+	private UsersEntity findValidUser(String email) {
+		validateEmail(email);
+		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 	}
 
+	private void validatePass(String pass) {
+		if (!CommonUtil.validateRegexPattern(pass, appConfig.getPassRegex())) {
+			throw new GenericException(ConstantMessage.INVALID_PASSWORD, HttpStatus.BAD_REQUEST);
+		}
+
+	}
+	private void validateEmail (String email){
+
+		if (!CommonUtil.validateRegexPattern(email, appConfig.getEmailRegex())) {
+			throw new GenericException(ConstantMessage.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
+		}
+	}
 }
