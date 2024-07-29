@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ntt.tl.evaluation.config.security.TokenProvider;
 import com.ntt.tl.evaluation.constant.ERoleUser;
+import com.ntt.tl.evaluation.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,12 +20,6 @@ import org.springframework.stereotype.Service;
 import com.ntt.tl.evaluation.config.AppConfig;
 import com.ntt.tl.evaluation.config.security.JwtUtils;
 import com.ntt.tl.evaluation.constant.ConstantMessage;
-import com.ntt.tl.evaluation.dto.RequestUpdateUser;
-import com.ntt.tl.evaluation.dto.RequestUser;
-import com.ntt.tl.evaluation.dto.ResponseCreateUser;
-import com.ntt.tl.evaluation.dto.ResponseGeneric;
-import com.ntt.tl.evaluation.dto.ResponseListUser;
-import com.ntt.tl.evaluation.dto.UserDto;
 import com.ntt.tl.evaluation.entity.RoleEntity;
 import com.ntt.tl.evaluation.entity.UsersEntity;
 import com.ntt.tl.evaluation.entity.UsersPhoneEntity;
@@ -34,11 +29,6 @@ import com.ntt.tl.evaluation.repository.UserRepository;
 import com.ntt.tl.evaluation.util.CommonUtil;
 import com.ntt.tl.evaluation.util.ErrorUtil;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 
 /**
@@ -90,6 +80,17 @@ public class UserService implements IUserServices {
 		userRepository.save(usersEntity);
 
 		return jwt;
+	}
+
+	@Override
+	public ResponseGeneric activeAccount(RequestActivateAccount requestActivateAccount){
+
+		UsersEntity findUser = findValidUser(requestActivateAccount.getEmail());
+		findUser.setIsActive(requestActivateAccount.getActivate());
+
+		userRepository.save(findUser);
+
+		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 	}
 	
 	/**

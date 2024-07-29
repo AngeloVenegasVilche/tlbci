@@ -2,12 +2,7 @@ package com.ntt.tl.evaluation.service;
 
 import java.util.Date;
 
-import com.ntt.tl.evaluation.dto.RequestUpdateUser;
-import com.ntt.tl.evaluation.dto.RequestUser;
-import com.ntt.tl.evaluation.dto.ResponseCreateUser;
-import com.ntt.tl.evaluation.dto.ResponseGeneric;
-import com.ntt.tl.evaluation.dto.ResponseListUser;
-import com.ntt.tl.evaluation.dto.UserDto;
+import com.ntt.tl.evaluation.dto.*;
 
 
 public interface IUserServices {
@@ -15,6 +10,8 @@ public interface IUserServices {
 	ResponseCreateUser createUser(RequestUser userData);
 
 	ResponseGeneric deleteUser(String idUser);
+
+	ResponseGeneric activeAccount(RequestActivateAccount requestActivateAccount);
 
 	Boolean updateLastLogin(String idUser, String token, Date loginDate);
 

@@ -131,4 +131,18 @@ public class UserController {
 	public ResponseEntity<ResponseGeneric> updateUser(@RequestBody RequestUpdateUser userUpdate, BindingResult errors) {
 		return new ResponseEntity<>(userServices.updateUser(userUpdate), HttpStatus.OK);
 	}
+
+	@Operation(summary = "Activación de cuentas")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = ConstantMessage.OK,
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGeneric.class))),
+			@ApiResponse(responseCode = "400", description = "Entrada inválida"),
+			@ApiResponse(responseCode = "403", description = ConstantMessage.UNAUTHORIZED),
+			@ApiResponse(responseCode = "404", description = ConstantMessage.USER_NOT_FOUND)
+	})
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping(value = "admin/activate/users")
+	public ResponseEntity<ResponseGeneric> activateAccount(@RequestBody RequestActivateAccount requestActivateAccount ) {
+		return new ResponseEntity<>(userServices.activeAccount(requestActivateAccount), HttpStatus.OK);
+	}
 }
