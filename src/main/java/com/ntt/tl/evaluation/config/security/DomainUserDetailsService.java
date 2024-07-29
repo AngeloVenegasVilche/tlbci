@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +29,6 @@ private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.clas
 private final UserRepository userRepository;
 
 public DomainUserDetailsService(UserRepository userRepository) {
-
     this.userRepository = userRepository;
 }
 
@@ -36,10 +36,13 @@ public DomainUserDetailsService(UserRepository userRepository) {
 @Transactional
 public UserDetails loadUserByUsername(final String login) {
     log.debug("Authenticating {}", login);
+
     return userRepository
         .findByEmail(login)
         .map(user -> createSpringSecurityUser(login, user))
         .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
+
+
 }
 
 private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, UsersEntity user) {
@@ -52,6 +55,7 @@ private org.springframework.security.core.userdetails.User createSpringSecurityU
         .stream()
         .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority.getName().name()))
         .collect(Collectors.toList());
-    return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPass(), grantedAuthorities);
+
+    return new User(user.getEmail(), user.getPass(), grantedAuthorities);
 }
 }

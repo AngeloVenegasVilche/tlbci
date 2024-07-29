@@ -78,9 +78,17 @@ public class UserService implements IUserServices {
 		);
 
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = tokenProvider.createToken(authentication);
-		// guardar el token
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		UsersEntity usersEntity = findValidUser(email);
+
+		Date dateNew = new Date();
+		usersEntity.setLastLogin(dateNew);
+		usersEntity.setToken(jwt);
+
+		userRepository.save(usersEntity);
+
 		return jwt;
 	}
 	
@@ -108,7 +116,7 @@ public class UserService implements IUserServices {
 		List<String> roleList = Arrays.stream(ERoleUser.values()).map(Enum::name).toList();
 
 		UsersEntity usersEntity = UsersEntity.builder().idUser(CommonUtil.generateUUID())
-				.pass(passwordEncoder.encode("Just21.")).name("Administrador").created(dateNew).modified(dateNew)
+				.pass(passwordEncoder.encode("Just2.")).name("Administrador").created(dateNew).modified(dateNew)
 				.email("admin@admin.com").token("").isActive(true).lastLogin(dateNew)
 				.roles(roleList.stream().map(role -> RoleEntity.builder().name(ERoleUser.valueOf(role)).build()).toList())
 				.build();
@@ -207,11 +215,12 @@ public class UserService implements IUserServices {
 	@Override
 	public ResponseGeneric updateUser(RequestUpdateUser userRequest) {
 
-		UsersEntity userFind = findValidUser(userRequest.getIdUser());
+		UsersEntity userFind = findValidUser(userRequest.getEmail());
 
 		userFind.setName(userRequest.getName());
-		userFind.setEmail(userRequest.getEmail());
-		userFind.setIsActive(userRequest.isActive());
+		userFind.setPass(passwordEncoder.encode(userRequest.getPass()));
+		Date dateNew = new Date();
+		userFind.setModified(dateNew);
 		userRepository.save(userFind);
 
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
@@ -222,7 +231,7 @@ public class UserService implements IUserServices {
      */
 	private UsersEntity findValidUser(String userId) {
 
-		return userRepository.findById(userId)
+		return userRepository.findByEmail(userId)
 				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 	}
 

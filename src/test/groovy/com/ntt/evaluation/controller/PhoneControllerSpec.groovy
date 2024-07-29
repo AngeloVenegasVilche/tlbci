@@ -1,7 +1,7 @@
 package com.ntt.evaluation.controller
 
 
-import com.ntt.tl.evaluation.controller.PhoneController
+import com.ntt.tl.evaluation.controller.UserPhoneController
 import com.ntt.tl.evaluation.dto.PhoneDto
 import com.ntt.tl.evaluation.dto.RequestPhoneUser
 import com.ntt.tl.evaluation.dto.ResponseGeneric
@@ -14,11 +14,11 @@ import spock.lang.Title
 
 @Title("Test unitarios para PhoneController")
 @Narrative("")
-@Subject(PhoneController)
+@Subject(UserPhoneController)
 class PhoneControllerSpec extends Specification {
 
     def userPhoneService = Mock(IPhoneService)
-    def phoneController = new PhoneController(userPhoneService: userPhoneService)
+    def phoneController = new UserPhoneController(userPhoneService: userPhoneService)
 
     def "test createUserPhone"() {
         given:

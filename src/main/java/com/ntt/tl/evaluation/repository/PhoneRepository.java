@@ -16,12 +16,12 @@ public interface PhoneRepository extends JpaRepository<UsersPhoneEntity, Integer
 	@Query("SELECT up FROM UsersPhoneEntity up WHERE up.phoneNumber = :phoneNumber "
 			+ "AND up.cityCode = :cityCode "
 			+ "AND up.countryCode = :countryCode "
-			+ "AND up.user.idUser = :userId")
+			+ "AND up.user.email = :email")
 	Optional<UsersPhoneEntity>  existsByPhoneNumberCityCodeAndCountryCode(
     		@Param("phoneNumber") String phoneNumber, 
     		@Param("cityCode") String cityCode, 
     		@Param("countryCode") String countryCode, 
-    		@Param("userId") String userId);
+    		@Param("email") String email);
 	
 	
 	@Query("SELECT up FROM UsersPhoneEntity up WHERE  up.id = :idPhone "

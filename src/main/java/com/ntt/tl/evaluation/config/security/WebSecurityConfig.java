@@ -59,18 +59,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                         .requestMatchers("/api/**").authenticated()
-
-                    	//.requestMatchers(HttpMethod.POST, "/tl/test/users").hasRole(ERoleUser.ADMIN.name())
-                    	//.requestMatchers(HttpMethod.GET, "/tl/test/users").hasAnyRole(ERoleUser.ADMIN.name(), ERoleUser.USER.name(), ERoleUser.EDITOR.name())
-                        //.requestMatchers(HttpMethod.GET, "/tl/test/users/{idUser}").hasAnyRole(ERoleUser.ADMIN.name(), ERoleUser.USER.name(), ERoleUser.EDITOR.name())
-                        //.requestMatchers(HttpMethod.DELETE, "/tl/test/users/{idUser}").hasAnyRole(ERoleUser.ADMIN.name())
-                        //.requestMatchers(HttpMethod.PUT, "/tl/test/users").hasAnyRole(ERoleUser.ADMIN.name(), ERoleUser.EDITOR.name())
-                        //.requestMatchers(HttpMethod.POST, "/tl/test/phones").hasRole(ERoleUser.ADMIN.name())
-                        //.requestMatchers(HttpMethod.DELETE, "/tl/test/phones/{phoneId}/{userId}").hasAnyRole(ERoleUser.ADMIN.name())
-                        //.requestMatchers(HttpMethod.PUT, "/tl/test/phones").hasAnyRole(ERoleUser.ADMIN.name(), ERoleUser.EDITOR.name())
-                        //.requestMatchers(HttpMethod.GET, "/security/loginUser").permitAll()
-
-                )
+                                        )
 
                 .addFilterBefore(authenticationJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 

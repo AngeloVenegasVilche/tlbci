@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Objeto de solicitud para agregar un teléfono a un usuario")
 public class RequestPhoneUser {
 
-    @NotEmpty
-    @Schema(description = "ID del usuario", example = "user123")
-    private String idUser;
+
+    @Schema(description = "email del usuario", example = "user123")
+    private String emaial;
 
     @Valid
     @Schema(description = "Objeto del teléfono", implementation = PhoneDto.class)

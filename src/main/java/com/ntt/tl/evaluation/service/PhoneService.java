@@ -34,12 +34,11 @@ public class PhoneService implements IPhoneService {
 	@Override
 	public ResponseGeneric createPhoneToUser(RequestPhoneUser requestPhoneUser) {
 
-		UsersEntity userFind = userRepository.findById(requestPhoneUser.getIdUser())
-				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+		UsersEntity userFind = findUserValid(requestPhoneUser.getEmaial());
 
 		Optional<UsersPhoneEntity> findPhone = phoneRepository.existsByPhoneNumberCityCodeAndCountryCode(
 				requestPhoneUser.getPhone().getNumber(), requestPhoneUser.getPhone().getCitycode(),
-				requestPhoneUser.getPhone().getContrycode(), requestPhoneUser.getIdUser());
+				requestPhoneUser.getPhone().getContrycode(), requestPhoneUser.getEmaial());
 
 		if (findPhone.isPresent()) {
 			throw new GenericException(ConstantMessage.PHONE_EXIST_USER, HttpStatus.CONFLICT);
@@ -75,7 +74,7 @@ public class PhoneService implements IPhoneService {
 	@Override
 	public ResponseGeneric modifyPhoneToUser(RequestPhoneUser requestPhoneUser) {
 
-		UsersEntity usersEntity = findUserValid(requestPhoneUser.getIdUser());
+		UsersEntity usersEntity = findUserValid(requestPhoneUser.getEmaial());
 
 		UsersPhoneEntity findPhone = findPhoneValid(usersEntity, requestPhoneUser.getPhone().getId());
 
@@ -89,9 +88,9 @@ public class PhoneService implements IPhoneService {
 
 	}
 
-	private UsersEntity findUserValid(String userId) {
+	private UsersEntity findUserValid(String email) {
 
-		return userRepository.findById(userId)
+		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
 	}

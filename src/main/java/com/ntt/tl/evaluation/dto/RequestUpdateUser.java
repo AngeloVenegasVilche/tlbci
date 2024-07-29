@@ -24,23 +24,13 @@ import lombok.NoArgsConstructor;
 public class RequestUpdateUser {
 
     @NotEmpty
-    @Schema(description = "ID del usuario", example = "user123")
-    private String idUser;
+    @Schema(description = "pass", example = "Just2.")
+    private String pass;
 
     @NotEmpty
     @Schema(description = "Nombre del usuario", example = "Juan Pérez")
     private String name;
 
-    @NotEmpty
-    @Email(message = "Correo no válido")
-    @Schema(description = "Correo electrónico del usuario", example = "user@example.com")
+    @Schema(description = "mail del usuario", example = "angelo.venegas@hotmail.com")
     private String email;
-
-    @Schema(description = "Estado activo del usuario", example = "true")
-    private boolean isActive;
-
-    @NotEmpty
-    @Valid
-    @ArraySchema(schema = @Schema(description = "Teléfonos del usuario para actualizar", implementation = PhoneUpdateDto.class))
-    private List<PhoneUpdateDto> phons;
 }
