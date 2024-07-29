@@ -5,10 +5,12 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,75 +22,41 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static org.springframework.boot.actuate.web.exchanges.Include.AUTHORIZATION_HEADER;
+
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private JwtUtils jwtUtils;
+	private TokenProvider tokenProvider;
 
-	@Autowired
-	private UserDetailsServiceImpl userDetailsServiceImpl;
+	public static final String AUTHORIZATION_HEADER = "Authorization";
 
-
-	@Override
-	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		String path = request.getRequestURI();
-		return path.startsWith("/health") ||
-				path.startsWith("/v2/api-docs") ||
-				path.startsWith("/security/loginUser") ||
-				path.startsWith("/v3/api-docs") ||
-				path.startsWith("/swagger-ui.html") ||
-				path.startsWith("/swagger-ui/");
-	}
+	public static final String AUTHORITIES_HEADER = "Authorities";
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
-		try {
 
-			String token = getTokenFromHeader(request.getHeader("Authorization"));
+			String token = resolveToken(request);
 
-			String userName = jwtUtils.getUserNameForToken(token);
+			if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
 
-			UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(userName);
+				Authentication authenticationToken = tokenProvider.getAuthentication(token);
 
-			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userName,
-					null, userDetails.getAuthorities());
-
-			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+			}
 
 			filterChain.doFilter(request, response);
-			
-		} catch (Exception e) {
-			handleException(response, HttpStatus.UNAUTHORIZED, ConstantMessage.UNAUTHORIZED);
-		}
 
 	}
 
-	private String getTokenFromHeader(String tokenHeader) {
-		if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
-			throw new UsernameNotFoundException(ConstantMessage.TOKEN_INVALIDO);
+	private String resolveToken(HttpServletRequest request) {
+		String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7);
 		}
+		return null;
+}
 
-		String token = tokenHeader.substring(7);
-
-		if (!jwtUtils.isTokenValid(token)) {
-			throw new UsernameNotFoundException(ConstantMessage.TOKEN_INVALIDO);
-		}
-
-		return token;
-	}
-
-	private void handleException(HttpServletResponse response, HttpStatus status, String message) throws IOException {
-
-		ErrorResponse errorResponse = ErrorResponse.builder().mensaje(message).build();
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String jsonResponse = objectMapper.writeValueAsString(errorResponse);
-
-		response.setStatus(status.value());
-		response.setContentType("application/json");
-		response.getWriter().write(jsonResponse);
-	}
 }
