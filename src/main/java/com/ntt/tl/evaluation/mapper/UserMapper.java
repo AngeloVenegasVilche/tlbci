@@ -56,7 +56,7 @@ public class UserMapper {
 
 		UserDto userDto = UserDto.builder().idUser(userBd.getIdUser()).name(userBd.getName()).email(userBd.getEmail())
 				.lastLogin(userBd.getLastLogin()).modified(userBd.getModified()).created(userBd.getCreated())
-				.isActive(userBd.getIsActive()).token(userBd.getToken()).phons(phoneBdToPhoneDto(userBd.getPhones()))
+				.isActive(userBd.getIsActive()).phons(phoneBdToPhoneDto(userBd.getPhones()))
 				.build();
 
 		return userDto;
@@ -68,7 +68,7 @@ public class UserMapper {
 		List<UserDto> listUserDto = listUser.stream()
 				.map(userBd -> UserDto.builder().idUser(userBd.getIdUser()).name(userBd.getName())
 						.email(userBd.getEmail()).lastLogin(userBd.getLastLogin()).modified(userBd.getModified())
-						.created(userBd.getCreated()).isActive(userBd.getIsActive()).token(userBd.getToken())
+						.created(userBd.getCreated()).isActive(userBd.getIsActive())
 						.phons(phoneBdToPhoneDto(userBd.getPhones())).build())
 				.collect(Collectors.toList());
 
@@ -82,7 +82,7 @@ public class UserMapper {
 
 		ResponseCreateUser responseUser = ResponseCreateUser.builder().idUser(userSave.getIdUser())
 				.isActive(userSave.getIsActive()).lastLogin(userSave.getLastLogin()).modified(userSave.getModified())
-				.created(userSave.getCreated()).token(userSave.getToken()).roles(roles).build();
+				.created(userSave.getCreated()).roles(roles).build();
 
 		return responseUser;
 

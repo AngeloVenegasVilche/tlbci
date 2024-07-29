@@ -96,11 +96,11 @@ Una vez que la aplicación esté en ejecución, puedes acceder a la documentaci�
 http://localhost:9090/swagger-ui.html
 ```
 ## Endpoint Loging:
-`http://localhost:9090/security/loginUser?email=admin@admin.com&pass=Just21.`
+`http://localhost:9090/api/login.`
 
 ```bash
     email: admin@admin.com
-    pass: Just21
+    pass: Just21.
     Estos datos corresponden al usuario con ROl de administrador. 
     Al logearse entregará un token JWT que debe ser unsado en el resto de los endpoint indicando el en header Authorization Bearer {token}
     Ej: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlVXNlciI6IkVESVRPUiIsInN1YiI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTcyMjE4NDQyMCwiZXhwIjoxNzIyMTg1MDIwfQ.fJ5jLJukILNbQ_GSmlzk-1iI3nyt9U-OasYjl3i3M2g

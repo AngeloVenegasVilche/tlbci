@@ -45,9 +45,6 @@ public class UserDto {
     @Schema(description = "Fecha de último inicio de sesión del usuario", example = "01/01/2024 12:00:00")
     private Date lastLogin;
 
-    @Schema(description = "Token de autenticación del usuario", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
-    private String token;
-
     @Schema(description = "Estado activo del usuario", example = "true")
     private Boolean isActive;
 

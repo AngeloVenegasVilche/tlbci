@@ -16,13 +16,13 @@ import com.ntt.tl.evaluation.constant.ConstantMessage;
 import com.ntt.tl.evaluation.entity.UsersEntity;
 import com.ntt.tl.evaluation.repository.UserRepository;
 
-@Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+//@Service
+public class UserDetailsServiceImpl {
 
-	@Autowired
+	//@Autowired
 	private UserRepository userRepository;
 
-	@Override
+	//@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		UsersEntity userEntity = findUserByEmail(email);
 		Collection<? extends GrantedAuthority> authorities = getAuthorities(userEntity);

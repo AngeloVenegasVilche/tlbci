@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.ntt.tl.evaluation.config.security.TokenProvider;
 import com.ntt.tl.evaluation.constant.ERoleUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +47,13 @@ import jakarta.transaction.Transactional;
  */
 @Service
 public class UserService implements IUserServices {
-	
+
+	@Autowired
+	private TokenProvider tokenProvider;
+
+	@Autowired
+	private AuthenticationManagerBuilder authenticationManagerBuilder;
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -59,51 +67,27 @@ public class UserService implements IUserServices {
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private JwtUtils jwtUtils;
-
-	@Autowired
 	private AppConfig appConfig;
 
 	@Override
-    @Operation(summary = "Login de usuario", description = "Autentica a un usuario con email y contraseña.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Login exitoso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGeneric.class))),
-        @ApiResponse(responseCode = "401", description = "Credenciales inválidas", content = @Content)
-    })
-	public ResponseGeneric loginUser(String email, String pass) {
+	public String loginUser(String email, String pass) {
 
-		UsersEntity findUser = userRepository.findByEmail(email)
-				.orElseThrow(() -> new GenericException(ConstantMessage.LOGIN_INVALID_USER_PASS, HttpStatus.UNAUTHORIZED));
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+				email,
+				pass
+		);
 
-		if (!passwordEncoder.matches(pass, findUser.getPass())) {
-			throw new GenericException(ConstantMessage.LOGIN_INVALID_USER_PASS, HttpStatus.UNAUTHORIZED);
-		}
-		
-		List<String> roleNames = findUser.getRoles().stream()
-			    .map(roleEntity -> roleEntity.getName().name()).toList();
-		
-		String token = jwtUtils.createToken(CommonUtil.parceListToMap(roleNames), findUser.getEmail());
-		Date dateNew = new Date();
-		
-		findUser.setLastLogin(dateNew);
-		findUser.setToken(token);
-		
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, pass));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-			
-		return ResponseGeneric.builder().message(token).build();
+		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = tokenProvider.createToken(authentication);
+		// guardar el token
+		return jwt;
 	}
 	
 	/**
 	 * Actualiza el ultimo login y token
 	 */
-    @Operation(summary = "Actualizar último login", description = "Actualiza la fecha de último login y el token de un usuario.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Último login actualizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content)
-    })
+
 	@Override
 	public Boolean updateLastLogin(String idUser, String token, Date loginDate) {
 
@@ -117,10 +101,7 @@ public class UserService implements IUserServices {
 
 	}
 
-    @Operation(summary = "Crear usuario administrador", description = "Crea un usuario administrador por defecto.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Administrador creado con éxito", content = @Content)
-    })
+
 	@Override
 	public void createAdminUser() {
 		Date dateNew = new Date();
@@ -140,12 +121,6 @@ public class UserService implements IUserServices {
 	 * Crea el usuario
 	 */
 	@Override
-    @Operation(summary = "Crear usuario", description = "Crea un nuevo usuario con los detalles proporcionados.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Usuario creado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseCreateUser.class))),
-        @ApiResponse(responseCode = "409", description = "El correo electrónico ya existe", content = @Content),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos", content = @Content)
-    })
 	@Transactional
 	public ResponseCreateUser createUser(RequestUser requestUser) {
 
@@ -171,7 +146,7 @@ public class UserService implements IUserServices {
 		Boolean inicialStatus = true;
 		UsersEntity usersEntity = userMapper.requestUserToUsersEntity(requestUser,
 				passwordEncoder.encode(requestUser.getPassword()),
-				jwtUtils.createToken(CommonUtil.parceListToMap(requestUser.getRoles()), requestUser.getEmail()),
+				JwtUtils.getCurrentJwt(),
 				dateNew, inicialStatus);
 
 		List<UsersPhoneEntity> listPhone = userMapper.listPhoneDtoToUsersListPhoneEntity(requestUser.getPhones(),
@@ -191,11 +166,7 @@ public class UserService implements IUserServices {
 	/**
 	 * Elimina el usuario.
 	 */
-    @Operation(summary = "Eliminar usuario", description = "Elimina un usuario por su ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario eliminado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGeneric.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content)
-    })
+
 	@Override
 	public ResponseGeneric deleteUser(String idUser) {
 
@@ -208,10 +179,7 @@ public class UserService implements IUserServices {
 	/**
 	 * Obtiene todos los usuarios.
 	 */
-    @Operation(summary = "Obtener todos los usuarios", description = "Obtiene una lista de todos los usuarios.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseListUser.class)))
-    })
+
 	@Override
 	public ResponseListUser getAllUser() {
 
@@ -224,11 +192,7 @@ public class UserService implements IUserServices {
 	/**
 	 * Obtiene un usuario en particular.
 	 */
-    @Operation(summary = "Obtener usuario por ID", description = "Obtiene los detalles de un usuario por su ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario obtenido con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content)
-    })
+
 	@Override
 	public UserDto getOneUser(String idUser) {
 
@@ -239,11 +203,7 @@ public class UserService implements IUserServices {
 	/**
 	 * Actualiza un usuario y sus telefonos.
 	 */
-    @Operation(summary = "Actualizar usuario", description = "Actualiza los detalles de un usuario, incluyendo nombre, correo electrónico y estado.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario actualizado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGeneric.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content)
-    })
+
 	@Override
 	public ResponseGeneric updateUser(RequestUpdateUser userRequest) {
 
@@ -260,10 +220,6 @@ public class UserService implements IUserServices {
     /**
      * Encuentra un usuario válido por su ID.
      */
-    @Operation(summary = "Encontrar usuario válido", description = "Encuentra un usuario válido por su ID. Si no se encuentra, lanza una excepción.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content)
-    })
 	private UsersEntity findValidUser(String userId) {
 
 		return userRepository.findById(userId)

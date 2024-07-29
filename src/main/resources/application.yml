@@ -28,8 +28,9 @@ spring:
         format_sql: true
         SQL: DEBUG
 security:
-  keyEncript: FBlBRsMjc0w/BggFv+bcKiSbqOAM/HVT5eMc2sJpgTsEDkGrPlrmeKvMLb7Amu8T
-  timeToken: 600000
+  jwt:
+    base64-secret: YTc0NTFhMGFiZGMxYTdjNzZmMWUzMjQ2YzYwN2VkODg2MzU2N2E2NjlmNzRkZjQzOWZhMDFmOTEzM2VkZmE4Nzc1NmI0MmE5M2E5ZTllNzEzMzk1NTExMTEzMGNmN2MyMGI0ZTYxMjQyMzBlNjNkNGYxMmQ4MzAyODcyZWRjNjI=
+    token-validity-in-seconds: 3600
 
 validations:
   passregex : "^(?=.*[A-Z])(?=.*\\d).{4,6}$"

@@ -32,12 +32,6 @@ public class PhoneService implements IPhoneService {
 	private UserRepository userRepository;
 
 	@Override
-    @Operation(summary = "Crear un teléfono para un usuario", description = "Añade un teléfono a un usuario existente.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Teléfono creado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGeneric.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content),
-        @ApiResponse(responseCode = "409", description = "El teléfono ya existe para el usuario", content = @Content)
-    })
 	public ResponseGeneric createPhoneToUser(RequestPhoneUser requestPhoneUser) {
 
 		UsersEntity userFind = userRepository.findById(requestPhoneUser.getIdUser())
@@ -63,11 +57,6 @@ public class PhoneService implements IPhoneService {
 	}
 
 	@Override
-    @Operation(summary = "Eliminar un teléfono de un usuario", description = "Elimina un teléfono de un usuario existente.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Teléfono eliminado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGeneric.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario o teléfono no encontrado", content = @Content)
-    })
 	@Transactional
 	public ResponseGeneric deletePhoneToUser(String userId, Integer phoneId) {
 
@@ -84,11 +73,6 @@ public class PhoneService implements IPhoneService {
 	}
 
 	@Override
-    @Operation(summary = "Modificar un teléfono de un usuario", description = "Modifica un teléfono de un usuario existente.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Teléfono modificado con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseGeneric.class))),
-        @ApiResponse(responseCode = "404", description = "Usuario o teléfono no encontrado", content = @Content)
-    })
 	public ResponseGeneric modifyPhoneToUser(RequestPhoneUser requestPhoneUser) {
 
 		UsersEntity usersEntity = findUserValid(requestPhoneUser.getIdUser());
