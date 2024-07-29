@@ -1,36 +1,31 @@
 package com.ntt.evaluation.controller
 
 import com.ntt.tl.evaluation.controller.AuthController
-import com.ntt.tl.evaluation.dto.ResponseGeneric
+import com.ntt.tl.evaluation.dto.LoginDto
 import com.ntt.tl.evaluation.service.IUserServices
+import com.ntt.tl.evaluation.config.security.JwtAuthorizationFilter
 import org.springframework.http.HttpStatus
-import spock.lang.Narrative
 import spock.lang.Specification
 import spock.lang.Subject
-import spock.lang.Title
 
-@Title("Test unitarios para AuthController")
-@Narrative("")
 @Subject(AuthController)
 class AuthControllerSpec extends Specification {
-
     def userServices = Mock(IUserServices)
     def authController = new AuthController(userServices: userServices)
 
     def "test generateToken"() {
         given:
-        def email = "test@example.com"
-        def password = "password123"
-        def expectedResponse = new ResponseGeneric("test")
+        def loginDto = new LoginDto(username: "test@example.com", password: "password123")
+        def expectedJwt = "test.jwt.token"
 
-        userServices.loginUser(_ as String, _ as String) >> expectedResponse;
+        userServices.loginUser(loginDto.username, loginDto.password) >> expectedJwt
 
         when:
-        def result = authController.generateToken(email, password)
+        def result = authController.generateToken(loginDto)
 
         then:
-        result.getStatusCode() == HttpStatus.CREATED
-        result.getBody() == expectedResponse
+        result.statusCode == HttpStatus.OK
+        result.body.idToken == expectedJwt
+        result.headers.getFirst(JwtAuthorizationFilter.AUTHORIZATION_HEADER) == "Bearer ${expectedJwt}"
     }
-
 }

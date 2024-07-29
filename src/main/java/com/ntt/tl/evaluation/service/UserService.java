@@ -7,6 +7,8 @@ import java.util.List;
 import com.ntt.tl.evaluation.config.security.TokenProvider;
 import com.ntt.tl.evaluation.constant.ERoleUser;
 import com.ntt.tl.evaluation.dto.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,9 +47,6 @@ public class UserService implements IUserServices {
 	private AuthenticationManagerBuilder authenticationManagerBuilder;
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
-
-	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -70,6 +69,7 @@ public class UserService implements IUserServices {
 		);
 
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
 		String jwt = tokenProvider.createToken(authentication);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 

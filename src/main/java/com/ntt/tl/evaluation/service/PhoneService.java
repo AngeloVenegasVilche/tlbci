@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import com.ntt.tl.evaluation.config.AppConfig;
 import com.ntt.tl.evaluation.util.CommonUtil;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class PhoneService implements IPhoneService {
 
 	@Autowired

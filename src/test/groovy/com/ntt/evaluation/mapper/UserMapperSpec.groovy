@@ -1,11 +1,11 @@
 package com.ntt.evaluation.controller.mapper
 
-
 import spock.lang.Specification
 import com.ntt.tl.evaluation.mapper.UserMapper
 import com.ntt.tl.evaluation.entity.*
 import com.ntt.tl.evaluation.dto.*
-import com.ntt.tl.evaluation.constant.ERoleUser;
+import com.ntt.tl.evaluation.constant.ERoleUser
+
 class UserMapperSpec extends Specification {
 
     UserMapper userMapper
@@ -16,7 +16,7 @@ class UserMapperSpec extends Specification {
 
     def "listRoleToEntity debería convertir una lista de nombres de roles a una lista de RoleEntities"() {
         given: "Una lista de nombres de roles"
-        def roles = ["ADMIN", "EDITOR"]
+        def roles = ["ADMIN", "USER"]
 
         when: "Se llama al método listRoleToEntity"
         def resultado = userMapper.listRoleToEntity(roles)
@@ -24,7 +24,7 @@ class UserMapperSpec extends Specification {
         then: "El resultado debe ser una lista de RoleEntity con los roles correctos"
         resultado.size() == 2
         resultado[0].name == ERoleUser.ADMIN
-        resultado[1].name == ERoleUser.EDITOR
+        resultado[1].name == ERoleUser.USER
     }
 
     def "listPhoneDtoToUsersListPhoneEntity debería convertir una lista de PhoneDto a una lista de UsersPhoneEntity"() {
@@ -33,7 +33,6 @@ class UserMapperSpec extends Specification {
                 new PhoneDto(number: "123456789", citycode: "1", contrycode: "34"),
                 new PhoneDto(number: "987654321", citycode: "2", contrycode: "34")
         ]
-
         def usuario = new UsersEntity(idUser: "usuario1")
 
         when: "Se llama al método listPhoneDtoToUsersListPhoneEntity"
@@ -43,7 +42,11 @@ class UserMapperSpec extends Specification {
         resultado.size() == 2
         resultado.every { it.user == usuario }
         resultado[0].phoneNumber == "123456789"
+        resultado[0].cityCode == "1"
+        resultado[0].countryCode == "34"
         resultado[1].phoneNumber == "987654321"
+        resultado[1].cityCode == "2"
+        resultado[1].countryCode == "34"
     }
 
     def "phoneBdToPhoneDto debería convertir una lista de UsersPhoneEntity a una lista de PhoneDto"() {
@@ -60,8 +63,12 @@ class UserMapperSpec extends Specification {
         resultado.size() == 2
         resultado[0].id == 1
         resultado[0].number == "123456789"
+        resultado[0].citycode == "1"
+        resultado[0].contrycode == "34"
         resultado[1].id == 2
         resultado[1].number == "987654321"
+        resultado[1].citycode == "2"
+        resultado[1].contrycode == "34"
     }
 
     def "phoneUpdateDtoToUsersPhoneEntity debería convertir un PhoneUpdateDto a un UsersPhoneEntity"() {
@@ -81,15 +88,15 @@ class UserMapperSpec extends Specification {
 
     def "userBdToUserDto debería convertir un UsersEntity a un UserDto"() {
         given: "Un UsersEntity"
+        def fechaActual = new Date()
         def usuario = new UsersEntity(
                 idUser: "usuario1",
                 name: "Usuario de Prueba",
                 email: "prueba@test.com",
-                lastLogin: new Date(),
-                modified: new Date(),
-                created: new Date(),
+                lastLogin: fechaActual,
+                modified: fechaActual,
+                created: fechaActual,
                 isActive: true,
-                token: "token123",
                 phones: []
         )
 
@@ -100,15 +107,19 @@ class UserMapperSpec extends Specification {
         resultado.idUser == "usuario1"
         resultado.name == "Usuario de Prueba"
         resultado.email == "prueba@test.com"
+        resultado.lastLogin == fechaActual
+        resultado.modified == fechaActual
+        resultado.created == fechaActual
         resultado.isActive
-        resultado.token == "token123"
+        resultado.phons.isEmpty()
     }
 
     def "listUsersEntityToListUserDto debería convertir una lista de UsersEntity a una lista de UserDto"() {
         given: "Una lista de UsersEntity"
+        def fechaActual = new Date()
         def usuarios = [
-                new UsersEntity(idUser: "usuario1", name: "Usuario 1", phones: []),
-                new UsersEntity(idUser: "usuario2", name: "Usuario 2", phones: [])
+                new UsersEntity(idUser: "usuario1", name: "Usuario 1", email: "usuario1@test.com", lastLogin: fechaActual, modified: fechaActual, created: fechaActual, isActive: true, phones: []),
+                new UsersEntity(idUser: "usuario2", name: "Usuario 2", email: "usuario2@test.com", lastLogin: fechaActual, modified: fechaActual, created: fechaActual, isActive: false, phones: [])
         ]
 
         when: "Se llama al método listUsersEntityToListUserDto"
@@ -117,18 +128,24 @@ class UserMapperSpec extends Specification {
         then: "El resultado debe ser una lista de UserDto con los datos correctos"
         resultado.size() == 2
         resultado[0].idUser == "usuario1"
+        resultado[0].name == "Usuario 1"
+        resultado[0].email == "usuario1@test.com"
+        resultado[0].isActive
         resultado[1].idUser == "usuario2"
+        resultado[1].name == "Usuario 2"
+        resultado[1].email == "usuario2@test.com"
+        !resultado[1].isActive
     }
 
     def "usersEntityToResponseCreateUser debería convertir un UsersEntity a un ResponseCreateUser"() {
         given: "Un UsersEntity"
+        def fechaActual = new Date()
         def usuario = new UsersEntity(
                 idUser: "usuario1",
                 isActive: true,
-                lastLogin: new Date(),
-                modified: new Date(),
-                created: new Date(),
-                token: "token123",
+                lastLogin: fechaActual,
+                modified: fechaActual,
+                created: fechaActual,
                 roles: [new RoleEntity(name: ERoleUser.ADMIN)]
         )
 
@@ -138,7 +155,9 @@ class UserMapperSpec extends Specification {
         then: "El resultado debe ser un ResponseCreateUser con los datos correctos"
         resultado.idUser == "usuario1"
         resultado.isActive
-        resultado.token == "token123"
+        resultado.lastLogin == fechaActual
+        resultado.modified == fechaActual
+        resultado.created == fechaActual
         resultado.roles == ["ADMIN"]
     }
 

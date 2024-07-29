@@ -12,7 +12,7 @@ public interface IUserServices {
 	ResponseGeneric deleteUser(String idUser);
 
 	ResponseGeneric activeAccount(RequestActivateAccount requestActivateAccount);
-	
+
 	ResponseListUser getAllUser();
 
 	UserDto getOneUser(String idUser);
