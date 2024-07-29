@@ -104,7 +104,7 @@ public class PhoneController {
 			@ApiResponse(responseCode = "404", description = ConstantMessage.USER_NOT_FOUND + " o " + ConstantMessage.PHONE_NOT_EXIST_USER)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping(value = "admin//phones/{phoneId}/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "admin/phones/{phoneId}/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseGeneric> deleteUserPhone(@PathVariable("phoneId") Integer phoneId, @PathVariable("userId") String userId) {
 		return new ResponseEntity<>(userPhoneService.deletePhoneToUser(userId, phoneId), HttpStatus.OK);
 	}
