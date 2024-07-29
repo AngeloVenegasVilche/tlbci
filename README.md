@@ -149,7 +149,7 @@ Gestión de Teléfonos:
             -Eliminar teléfonos.
 Para más detalles, consulta la documentación generada con Swagger : http://localhost:9090/swagger-ui/index.html
 
-Además, puedes importar la colección de Postman "xxxxxxxxx" disponible en la carpeta resource.
+Además, puedes importar la colección de Postman "Apis-User-tl-Angelo-v.postman_collection.json" disponible en la carpeta resource.
 ```
 
 
