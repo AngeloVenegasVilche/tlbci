@@ -1,6 +1,13 @@
 # Proyecto Spring Boot - Gestión de Usuarios
 
-Este proyecto es una aplicación robusta para la gestión de usuarios y sus teléfonos, desarrollada con Spring Boot y Java. Esta aplicación ha sido creada como parte del proceso de postulación al puesto de líder técnico en NTT Data, demostrando habilidades en desarrollo backend, seguridad, y buenas prácticas de programación.
+El ejercicio se consideró la creación de usuarios y sus teléfonos, para esto se asignaron dos roles dentro de la aplicación:
+## Rol Administrador:
+Su función es dar de altos los usuarios del sistema y puede modificar, eliminar, cambiar estados a cualquier usuario del sistema, así como sus teléfonos.
+
+##  Rol Usuario:
+Solo puede modificar sus propios datos y modificar sus teléfonos.
+Se omitió intencionalmente devolver el token dentro de la creación puesto que es considerado un problema de seguridad.
+
 
 ## Características
 
@@ -9,9 +16,10 @@ Este proyecto es una aplicación robusta para la gestión de usuarios y sus tel�
 - Documentación interactiva de la API con OpenAPI/Swagger.
 - Configuración avanzada de seguridad utilizando `SecurityFilterChain`.
 - Implementación de DTOs para una transferencia de datos eficiente y segura.
-- Mapeo inteligente entre entidades y DTOs.
-- Pruebas unitarias exhaustivas con Spock Framework.
+- Mapeo  entre entidades y DTOs.
+- Pruebas unitarias  con Spock Framework.
 - Manejo de excepciones personalizado para una mejor experiencia de usuario.
+- Manejo de logs info a criterio.
 
 ## Requisitos Previos
 
@@ -107,58 +115,42 @@ http://localhost:9090/swagger-ui.html
     
 ```
 
-## Roles de usuario:
-
-```bash
-**Rol: ADMIN**
-    POST /tl/test/users: Crear usuarios
-    GET /tl/test/users: Obtener lista de usuarios
-    GET /tl/test/users/{idUser}: Obtener detalles de un usuario por ID
-    DELETE /tl/test/users/{idUser}: Eliminar un usuario por ID
-    PUT /tl/test/users: Actualizar usuarios
-    POST /tl/test/phones: Crear teléfonos
-    DELETE /tl/test/phones/{phoneId}/{userId}: Eliminar un teléfono por ID y usuario ID
-    PUT /tl/test/phones: Actualizar teléfonos
-
-**Rol: USER**
-    GET /tl/test/users: Obtener lista de usuarios
-    GET /tl/test/users/{idUser}: Obtener detalles de un usuario por ID
-
-**Rol: EDITOR**
-    GET /tl/test/users: Obtener lista de usuarios
-    GET /tl/test/users/{idUser}: Obtener detalles de un usuario por ID
-    PUT /tl/test/users: Actualizar usuarios
-    PUT /tl/test/phones: Actualizar teléfonos
-
-**Rutas Públicas (Acceso sin autenticación)**
-    GET /security/loginUser: Acceso a la página de login
+## Probar el micro servicio:
 ```
-## Curl de creacion de usuario
-    Ej: reemplace el token por el del administrador, paso anterior  he indique el rol que tendrá el usuario  "roles" :["USER"] :
-```bash
-curl --location 'http://localhost:9090/tl/test/users' \
-    --header 'accept: application/json' \
-    --header 'Content-Type: application/json' \
-    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlVXNlciI6IkVESVRPUiIsInN1YiI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTcyMjE4Mzg3NCwiZXhwIjoxNzIyMTg0NDc0fQ.59Uc6eFxWvN60BJgEqzAfYv9UtGMsI0FO8_UHBYRJts' \
-    --header 'Cookie: JSESSIONID=BEC52BC480F0B393BB2F9ACD43341E93' \
-    --data-raw '{
-        "email": "angelo.venegas@hotmail.it",
-        "name": "Angelo Venegas",
-        "password": "Jus12.",
-        "phones": [
-            {
-                "citycode": "45",
-                "contrycode": "56",
-                "number": "978526198"
-            },
-            {
-                "citycode": "45",
-                "contrycode": "56",
-                "number": "458796258"
-            }
-        ],
-        "roles" :["USER"] 
-    }'
+Probar la Aplicación
+Inicio de Sesión: Para comenzar, ingresa al endpoint de login en http://localhost:9090/api/login 
+utilizando las credenciales de administrador previamente descritas.
+
+Acceso a Endpoints de Administrador: 
+Después de iniciar sesión, tendrás acceso a todos los endpoints para el rol "ADMIN" en admin/*. 
+Las funcionalidades disponibles incluyen:
+
+Gestión de Usuarios:
+            -Activar o desactivar usuarios.
+            -Crear nuevos usuarios.
+            -Modificar datos personales de los usuarios.
+            -Eliminar usuarios.
+            -Listar todos los usuarios.
+            -Obtener detalles de un usuario específico.
+Gestión de Teléfonos:
+            -Agregar teléfonos.
+            -Modificar detalles de teléfonos.
+            -Eliminar teléfonos.
+
+Usuarios con Rol "USER": 
+Los usuarios creados con el rol "USER" tienen acceso a las siguientes funcionalidades:
+
+Gestión de Datos Personales:
+            -Modificar sus propios datos personales.
+            -Obtener sus datos personales.
+Gestión de Teléfonos:
+            -Modificar sus propios teléfonos.
+            -Agregar teléfonos.
+            -Eliminar teléfonos.
+Para más detalles, consulta la documentación generada con Swagger : http://localhost:9090/swagger-ui/index.html
+
+Además, puedes importar la colección de Postman "xxxxxxxxx" disponible en la carpeta resource.
 ```
 
-```
+
+
