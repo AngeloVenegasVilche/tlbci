@@ -6,6 +6,7 @@ import com.ntt.tl.evaluation.config.AppConfig;
 import com.ntt.tl.evaluation.util.CommonUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import jakarta.transaction.Transactional;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 public class PhoneService implements IPhoneService {
 
 	@Autowired
@@ -42,7 +44,7 @@ public class PhoneService implements IPhoneService {
 
 	@Override
 	public ResponseGeneric createPhoneToUser(RequestPhoneUser requestPhoneUser) {
-
+		log.info("Inicio de createPhoneToUser con email: {}", requestPhoneUser.getEmaial());
 		UsersEntity userFind = findUserValid(requestPhoneUser.getEmaial());
 
 		Optional<UsersPhoneEntity> findPhone = phoneRepository.existsByPhoneNumberCityCodeAndCountryCode(
@@ -59,7 +61,7 @@ public class PhoneService implements IPhoneService {
 				.phoneNumber(requestPhoneUser.getPhone().getNumber()).user(userFind).build();
 
 		usersPhoneEntity = phoneRepository.save(usersPhoneEntity);
-
+		log.info("Teléfono guardado con ID: {}", usersPhoneEntity.getId());
 		return ResponseGeneric.builder().message("id :" + usersPhoneEntity.getId().toString()).build();
 
 	}
@@ -67,7 +69,7 @@ public class PhoneService implements IPhoneService {
 	@Override
 	@Transactional
 	public ResponseGeneric deletePhoneToUser(String userId, Integer phoneId) {
-
+		log.info("Inicio de deletePhoneToUser con userId: {}, phoneId: {}", userId, phoneId);
 		UsersEntity usersEntity = findUserValid(userId);
 		UsersPhoneEntity findPhone = findPhoneValid(usersEntity, phoneId);
 
@@ -76,13 +78,14 @@ public class PhoneService implements IPhoneService {
 		userRepository.save(usersEntity);
 		phoneRepository.delete(findPhone);
 
+		log.info("Teléfono con ID: {} eliminado para el usuario: {}", phoneId, userId);
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 
 	}
 
 	@Override
 	public ResponseGeneric modifyPhoneToUser(RequestPhoneUser requestPhoneUser) {
-
+		log.info("Inicio de modifyPhoneToUser con email: {}", requestPhoneUser.getEmaial());
 		UsersEntity usersEntity = findUserValid(requestPhoneUser.getEmaial());
 
 		UsersPhoneEntity findPhone = findPhoneValid(usersEntity, requestPhoneUser.getPhone().getId());
@@ -92,27 +95,32 @@ public class PhoneService implements IPhoneService {
 		findPhone.setPhoneNumber(requestPhoneUser.getPhone().getNumber());
 
 		phoneRepository.save(findPhone);
+		log.info("Teléfono con ID: {} modificado para el usuario: {}", findPhone.getId(), requestPhoneUser.getEmaial());
 
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 
 	}
 
 	private UsersEntity findUserValid(String email) {
-
+		log.info("Validando usuario con email: {}", email);
 		if (!CommonUtil.validateRegexPattern(email, appConfig.getEmailRegex())) {
 			throw new GenericException(ConstantMessage.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
 		}
 
-		return userRepository.findByEmail(email)
+		UsersEntity user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new GenericException(ConstantMessage.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
-
+		log.info("Usuario encontrado con email: {}", email);
+		return user;
 	}
 
 	private UsersPhoneEntity findPhoneValid(UsersEntity findUser, Integer phoneId) {
-
-		return findUser.getPhones().stream().filter(o -> o.getId() == phoneId).findFirst()
+		log.info("Validando teléfono con ID: {} para el usuario con email: {}", phoneId, findUser.getEmail());
+		UsersPhoneEntity phone = findUser.getPhones().stream()
+				.filter(o -> o.getId() == phoneId)
+				.findFirst()
 				.orElseThrow(() -> new GenericException(ConstantMessage.PHONE_NOT_EXIST_USER, HttpStatus.NOT_FOUND));
-
+		log.info("Teléfono válido encontrado con ID: {}", phoneId);
+		return phone;
 	}
 
 }

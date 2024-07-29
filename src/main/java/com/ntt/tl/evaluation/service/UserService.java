@@ -9,6 +9,7 @@ import com.ntt.tl.evaluation.constant.ERoleUser;
 import com.ntt.tl.evaluation.dto.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,7 @@ import jakarta.transaction.Transactional;
  * @author avenegas
  *
  */
+@Slf4j
 @Service
 public class UserService implements IUserServices {
 
@@ -61,12 +63,16 @@ public class UserService implements IUserServices {
 	@Override
 	public String loginUser(String email, String pass) {
 
+		log.info("Intentando iniciar sesión para el usuario con email: {}", email);
+
 		validatePass(pass);
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				email,
 				pass
 		);
+
+		log.debug("Usuario autenticado exitosamente, generando token.");
 
 		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
@@ -81,6 +87,7 @@ public class UserService implements IUserServices {
 
 		userRepository.save(usersEntity);
 
+		log.info("Inicio de sesión exitoso para el usuario con email: {}", email);
 		return jwt;
 	}
 
@@ -99,10 +106,9 @@ public class UserService implements IUserServices {
 	 * Actualiza el ultimo login y token
 	 */
 
-
-
 	@Override
 	public void createAdminUser() {
+		log.info("Creando usuario administrador");
 		Date dateNew = new Date();
 		List<String> roleList = Arrays.stream(ERoleUser.values()).map(Enum::name).toList();
 
@@ -114,6 +120,8 @@ public class UserService implements IUserServices {
 
 		userRepository.save(usersEntity);
 
+		log.info("Usuario administrador creado exitosamente");
+
 	}
 
 	/**
@@ -122,6 +130,7 @@ public class UserService implements IUserServices {
 	@Override
 	@Transactional
 	public ResponseCreateUser createUser(RequestUser requestUser) {
+		log.info("Creando usuario con email: {}", requestUser.getEmail());
 
 		validateEmail(requestUser.getEmail());
 		validatePass(requestUser.getPassword());
@@ -151,6 +160,8 @@ public class UserService implements IUserServices {
 
 		UsersEntity userSave = userRepository.save(usersEntity);
 
+		log.info("Usuario creado exitosamente con email: {}", requestUser.getEmail());
+
 		return userMapper.usersEntityToResponseCreateUser(userSave);
 
 	}
@@ -162,9 +173,10 @@ public class UserService implements IUserServices {
 
 	@Override
 	public ResponseGeneric deleteUser(String email) {
-
+		log.info("Eliminando usuario con email: {}", email);
 		UsersEntity userFind = findValidUser(email);
 		userRepository.delete(userFind);
+		log.info("Eliminando usuario con exito: {}", email);
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 
 	}
@@ -175,10 +187,11 @@ public class UserService implements IUserServices {
 
 	@Override
 	public ResponseListUser getAllUser() {
-
+		log.info("Obteniendo todos los usuario ");
 		List<UsersEntity> listUser = userRepository.findAll();
 		List<UserDto> listUserDto = userMapper.listUsersEntityToListUserDto(listUser);
 
+		log.info("Obteniendo todos los usuario ok");
 		return (ResponseListUser.builder().userData(listUserDto).build());
 	}
 
@@ -188,18 +201,18 @@ public class UserService implements IUserServices {
 
 	@Override
 	public UserDto getOneUser(String email) {
-
+		log.info("Obteniendo un los usuario {}", email);
 		UsersEntity userFind = findValidUser(email);
+		log.info("Obteniendo un los usuario ok {}", email);
 		return userMapper.userBdToUserDto(userFind);
 	}
 
 	/**
 	 * Actualiza un usuario y sus telefonos.
 	 */
-
 	@Override
 	public ResponseGeneric updateUser(RequestUpdateUser userRequest) {
-
+		log.info("Actualizando un los usuario {}", userRequest.getEmail());
 		UsersEntity userFind = findValidUser(userRequest.getEmail());
 
 		userFind.setName(userRequest.getName());
@@ -208,6 +221,7 @@ public class UserService implements IUserServices {
 		userFind.setModified(dateNew);
 		userRepository.save(userFind);
 
+		log.info("Actualizando un los usuario  ok {}", userRequest.getEmail());
 		return ResponseGeneric.builder().message(ConstantMessage.OK).build();
 	}
 

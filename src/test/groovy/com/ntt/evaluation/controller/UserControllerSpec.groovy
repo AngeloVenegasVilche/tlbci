@@ -56,7 +56,7 @@ class UserControllerSpec extends Specification {
 
     def "test createUser para ADMIN"() {
         given: "Una solicitud de creación de usuario"
-        def userData = new RequestUser(name: "John Doe", email: "john@example.com", password: "password123", roles: ["USER"])
+        def userData = new RequestUser(name: "angelo venegas", email: "angelo.venegas@example.com", password: "password123", roles: ["USER"])
         def expectedResponse = ResponseCreateUser.builder()
                 .idUser("123")
                 .created(new Date())
@@ -84,7 +84,7 @@ class UserControllerSpec extends Specification {
 
     def "test getAllUser para ADMIN"() {
         given: "Una lista de usuarios"
-        def expectedResponse = new ResponseListUser(userData: [new UserDto(idUser: "123", name: "John Doe")])
+        def expectedResponse = new ResponseListUser(userData: [new UserDto(idUser: "123", name: "Angelo Venegas")])
         userServices.getAllUser() >> expectedResponse
 
         when: "Se llama al método getAllUser"
@@ -98,7 +98,7 @@ class UserControllerSpec extends Specification {
     def "test getUser para ADMIN"() {
         given: "Un ID de usuario"
         def idUser = "123"
-        def expectedResponse = new UserDto(idUser: idUser, name: "John Doe")
+        def expectedResponse = new UserDto(idUser: idUser, name: "Angelo Venegas")
         userServices.getOneUser(idUser) >> expectedResponse
 
         when: "Se llama al método getUser"
@@ -112,7 +112,7 @@ class UserControllerSpec extends Specification {
     def "test deleteUser para ADMIN"() {
         given: "Un ID de usuario"
         def idUser = "123"
-        def expectedResponse = new ResponseGeneric(message: "Usuario eliminado exitosamente")
+        def expectedResponse = new ResponseGeneric(message: "Ok")
         userServices.deleteUser(idUser) >> expectedResponse
 
         when: "Se llama al método deleteUser"
@@ -125,8 +125,8 @@ class UserControllerSpec extends Specification {
 
     def "test updateUser para ADMIN"() {
         given: "Una solicitud de actualización de usuario"
-        def userUpdate = new RequestUpdateUser(email: "john@example.com", name: "John Doe Updated")
-        def expectedResponse = new ResponseGeneric(message: "Usuario actualizado exitosamente")
+        def userUpdate = new RequestUpdateUser(email: "angelo.venegas@example.com", name: "Angelo Venegas Vilche")
+        def expectedResponse = new ResponseGeneric(message: "Ok")
         userServices.updateUser(userUpdate) >> expectedResponse
 
         when: "Se llama al método updateUser para ADMIN"
@@ -139,8 +139,8 @@ class UserControllerSpec extends Specification {
 
     def "test activateAccount para ADMIN"() {
         given: "Una solicitud de activación de cuenta"
-        def requestActivateAccount = new RequestActivateAccount(email: "john@example.com")
-        def expectedResponse = new ResponseGeneric(message: "Cuenta activada exitosamente")
+        def requestActivateAccount = new RequestActivateAccount(email: "angelo.venegas@example.com")
+        def expectedResponse = new ResponseGeneric(message: "Ok")
         userServices.activeAccount(requestActivateAccount) >> expectedResponse
 
         when: "Se llama al método activateAccount"

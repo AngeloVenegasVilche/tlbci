@@ -10,12 +10,8 @@ import com.ntt.tl.evaluation.entity.UsersPhoneEntity
 import com.ntt.tl.evaluation.mapper.UserMapper
 import com.ntt.tl.evaluation.repository.UserRepository
 import com.ntt.tl.evaluation.service.UserService
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Narrative
 import spock.lang.Specification
@@ -58,7 +54,7 @@ class UserServiceSpec extends Specification {
     def "createUser crea un usuario correctamente"() {
         given:
         def requestUser = new RequestUser(
-                name: "John Doe",
+                name: "Angelo Venegas",
                 email: "new@example.com",
                 password: "validPassword",
                 roles: ["USER"],
@@ -124,10 +120,10 @@ class UserServiceSpec extends Specification {
 
     def "getOneUser retorna un usuario válido con email"() {
         given:
-        def email = "john@example.com"
+        def email = "angelo@example.com"
         def user = new UsersEntity(
                 idUser: "user123",
-                name: "John Doe",
+                name: "Angelo Venegas",
                 email: email,
                 created: new Date(),
                 modified: new Date(),
@@ -139,7 +135,7 @@ class UserServiceSpec extends Specification {
 
         def userDto = new UserDto(
                 idUser: "user123",
-                name: "John Doe",
+                name: "Angelo Venegas",
                 email: email,
                 created: user.created,
                 modified: user.modified,
@@ -157,7 +153,7 @@ class UserServiceSpec extends Specification {
         then:
         result == userDto
         result.email == email
-        result.name == "John Doe"
+        result.name == "Angelo Venegas"
         result.phons.size() == 1
         result.phons[0].number == "123456789"
     }
