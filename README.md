@@ -50,6 +50,7 @@ Para una lista completa de dependencias, consulta el archivo `pom.xml`.
 ## Clonar el repositorio:
    ```bash
    git clone https://github.com/AngeloVenegasVilche/tlbci.git
+   rama: feature/develop
    cd tlbci
 ```
 ## Estructura del proyecto
