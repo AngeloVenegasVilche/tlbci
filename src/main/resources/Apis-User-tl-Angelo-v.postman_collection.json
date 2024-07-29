@@ -1,0 +1,602 @@
+{
+	"info": {
+		"_postman_id": "a5018efe-b42b-49ce-8d3e-9b9385fb6c3a",
+		"name": "Apis User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4343879",
+		"_collection_link": "https://blue-zodiac-345605.postman.co/workspace/My-Workspace~7f2f2a9c-b60e-4d6a-833b-0707e2443ea1/collection/4343879-a5018efe-b42b-49ce-8d3e-9b9385fb6c3a?action=share&source=collection_link&creator=4343879"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"if (jsonData.id_token) {\r",
+									"    var bearerToken = \"Bearer \" + jsonData.id_token;\r",
+									"    pm.environment.set(\"tokenAut\", bearerToken);\r",
+									"    console.log(\"Token Bearer guardado exitosamente\");\r",
+									"} else {\r",
+									"    console.log(\"No se encontró el token en la respuesta\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"angelo.venegas@hotmail.it\",\r\n    \"password\": \"Just2.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "userCreate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"angelo.venegas@hotmail.it\",\r\n    \"name\": \"Angelo Venegas\",\r\n    \"password\": \"Just2.\",\r\n    \"phones\": [\r\n        {\r\n            \"citycode\": \"45\",\r\n            \"contrycode\": \"56\",\r\n            \"number\": \"978526198\"\r\n        },\r\n        {\r\n            \"citycode\": \"45\",\r\n            \"contrycode\": \"56\",\r\n            \"number\": \"458796258\"\r\n        }\r\n    ],\r\n    \"roles\" :[\"USER\"] \r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/admin/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ActivateAccount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"angelo.venegas@hotmail.it\",\r\n    \"activate\": true\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/admin/activate/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"admin",
+								"activate",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userAll",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9090/api/admin/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userOne",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9090/api/admin/users/admin@admin.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"admin",
+								"users",
+								"admin@admin.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbmdlbG8gVmVuZWdhcyIsInR5cGVVc2VyIjoiU0EiLCJleHAiOjE2OTA4MDgzNTQsImlhdCI6MTY5MDgwNzc1NH0.WSFcvuyzJ5tofSMdzqw4SlcNtnbm4Cxbm-nvOC14MkA"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9090/tl/test/users/16da8d8d-e040-4964-aca2-5502e050ec4c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"tl",
+								"test",
+								"users",
+								"16da8d8d-e040-4964-aca2-5502e050ec4c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userUpdate",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"elox@gmail.com\",\r\n    \"pass\": \"Just3.\",\r\n    \"name\": \"Angelo Venegas Vilche \"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phoneCreate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emaial\": \"angelo.venegas@hotmail.it\",\r\n    \"phone\": {\r\n        \"citycode\": \"45\",\r\n        \"contrycode\": \"56\",\r\n        \"number\": \"978526197\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/admin/phones",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"admin",
+								"phones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phoneDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/admin/phones/1/angelo.venegas@hotmail.it",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"admin",
+								"phones",
+								"1",
+								"angelo.venegas@hotmail.it"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phoneModify",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emaial\": \"angelo.venegas@hotmail.it\",\r\n    \"phone\": {\r\n        \"id\": 1,\r\n        \"citycode\": \"45\",\r\n        \"contrycode\": \"56\",\r\n        \"number\": \"978526198\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/admin/phones",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"admin",
+								"phones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CurrentUser",
+			"item": [
+				{
+					"name": "userInfo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBbmdlbG8gVmVuZWdhcyIsInR5cGVVc2VyIjoiU0EiLCJleHAiOjE2OTA4MDgzNTQsImlhdCI6MTY5MDgwNzc1NH0.WSFcvuyzJ5tofSMdzqw4SlcNtnbm4Cxbm-nvOC14MkA",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9090/tl/test/users/3fd84403-8a3b-4f83-943c-91fee44e7d68",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"tl",
+								"test",
+								"users",
+								"3fd84403-8a3b-4f83-943c-91fee44e7d68"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userUpdate",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idUser\": \"16da8d8d-e040-4964-aca2-5502e050ec4c\",\r\n    \"active\": true,\r\n    \"email\": \"elox@gmail.com\",\r\n    \"name\": \"Jose Sambrano\",\r\n    \"phons\": [\r\n        {\r\n            \"id\": \"2\",\r\n            \"citycode\": \"42\",\r\n            \"contrycode\": \"52\",\r\n            \"number\": \"78526478\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phoneCreate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idUser\": \"3c0c68f1-84a8-4630-b25d-052e32dc9184\",\r\n    \"phone\": {\r\n        \"citycode\": \"45\",\r\n        \"contrycode\": \"56\",\r\n        \"number\": \"978526197\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/phones",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"phones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phoneDelete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/phones/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"phones",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phoneModify",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{tokenAut}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": {\r\n        \"id\": 1,\r\n        \"citycode\": \"45\",\r\n        \"contrycode\": \"56\",\r\n        \"number\": \"978526198\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/phones",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"phones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
