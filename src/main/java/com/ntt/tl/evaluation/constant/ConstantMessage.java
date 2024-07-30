@@ -20,5 +20,7 @@ public class ConstantMessage {
 	    public static final String TOKEN_INVALIDO = "token invalido";
 	    
 	    public static final String UNAUTHORIZED = "Sin autorización";
+
+		public static final String PHONE_UNIQUE = "Telefonos nos pueden estar repetidos";
 	    
 }

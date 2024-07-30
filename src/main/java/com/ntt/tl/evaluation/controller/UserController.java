@@ -128,7 +128,7 @@ public class UserController {
 	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "admin/users")
-	public ResponseEntity<ResponseGeneric> updateUser(@RequestBody RequestUpdateUser userUpdate, BindingResult errors) {
+	public ResponseEntity<ResponseGeneric> updateUser(@RequestBody RequestUpdateUser userUpdate) {
 		return new ResponseEntity<>(userServices.updateUser(userUpdate), HttpStatus.OK);
 	}
 

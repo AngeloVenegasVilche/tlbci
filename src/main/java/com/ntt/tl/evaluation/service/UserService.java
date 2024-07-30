@@ -131,7 +131,7 @@ public class UserService implements IUserServices {
 	@Transactional
 	public ResponseCreateUser createUser(RequestUser requestUser) {
 		log.info("Creando usuario con email: {}", requestUser.getEmail());
-
+		validateUniquephone(requestUser.getPhones());
 		validateEmail(requestUser.getEmail());
 		validatePass(requestUser.getPassword());
 
@@ -244,6 +244,12 @@ public class UserService implements IUserServices {
 
 		if (!CommonUtil.validateRegexPattern(email, appConfig.getEmailRegex())) {
 			throw new GenericException(ConstantMessage.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	private void validateUniquephone(List<PhoneDto> phones){
+		if(phones.stream().distinct().count() != phones.size()){
+			throw new GenericException(ConstantMessage.PHONE_UNIQUE, HttpStatus.BAD_REQUEST);
 		}
 	}
 }
